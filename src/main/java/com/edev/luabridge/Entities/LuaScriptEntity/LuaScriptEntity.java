@@ -1,5 +1,6 @@
 package com.edev.luabridge.Entities.LuaScriptEntity;
 
+import com.edev.luabridge.Entities.APIEntity.ApiEntity;
 import com.edev.luabridge.Models.RouteTypeModel.RouteType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,9 @@ public class LuaScriptEntity {
     private String name;
     private RouteType route;
     private String script;
+    @ManyToOne
+    @JoinColumn(name = "api_entity_id")
+    private ApiEntity apiEntity;
     public LuaScriptEntity(){
 
     }

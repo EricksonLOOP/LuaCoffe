@@ -13,7 +13,7 @@ import java.io.FileNotFoundException;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/lua/")
+@RequestMapping("/api/lua")
 @CrossOrigin(originPatterns = "http://localhost:5173/")
 public class LuaController {
     @Autowired
