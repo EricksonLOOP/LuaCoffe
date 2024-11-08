@@ -3,6 +3,7 @@ package com.edev.luabridge.Services.LuaServices;
 import com.edev.luabridge.DTOs.RequestDTO.RequestDTO;
 import com.edev.luabridge.DTOs.ScriptDTO.ScriptDTO;
 import com.edev.luabridge.Entities.LuaScriptEntity.LuaScriptEntity;
+import com.edev.luabridge.Models.RouteTypeModel.RouteType;
 import com.edev.luabridge.Repositories.LuaRepository;
 import com.edev.luabridge.Services.FunctionsServices.LuaActions;
 import org.luaj.vm2.Globals;
@@ -38,12 +39,12 @@ public class LuaServicesImpl implements LuaServices{
     public ResponseEntity<?> runScript(RequestDTO requestDTO) {
         try{
 
-            Optional<LuaScriptEntity> optionalLuaScriptEntity = luaRepository.findByName(requestDTO.name());
+            Optional<LuaScriptEntity> optionalLuaScriptEntity = luaRepository.findByRoute(requestDTO.route());
             if (optionalLuaScriptEntity.isEmpty()){
                 return ResponseEntity.badRequest().body("Script não encontrado!");
             }
             String script = optionalLuaScriptEntity.get().getScript();
-            String scriptName = optionalLuaScriptEntity.get().getName();
+            String scriptName = optionalLuaScriptEntity.get().getRoute();
             String complete = luaActions.ReplaceWaitingValues(script, requestDTO.params());
             LuaValue chunk = globals.load(complete, scriptName);
             LuaValue response = chunk.call();
@@ -60,13 +61,13 @@ public class LuaServicesImpl implements LuaServices{
     @Override
     public ResponseEntity<?> adicionarScript(LuaScriptEntity luaScriptEntity) {
         try{
-            Optional<LuaScriptEntity> optionalLuaScriptEntity = luaRepository.findByName(luaScriptEntity.getName());
+            Optional<LuaScriptEntity> optionalLuaScriptEntity = luaRepository.findByRoute(luaScriptEntity.getRoute());
             if (optionalLuaScriptEntity.isPresent()){
                 return ResponseEntity.badRequest().body("Script com mesmo nome ja existente");
             }
             LuaScriptEntity novoscript = LuaScriptEntity.builder()
-                    .name(luaScriptEntity.getName())
                     .route(luaScriptEntity.getRoute())
+                    .method(RouteType.valueOf(luaScriptEntity.getRoute()))
                     .script(luaScriptEntity.getScript())
                     .build();
             return ResponseEntity.ok().body("Script Criado com sucesso! Script: "+ luaRepository.save(novoscript));

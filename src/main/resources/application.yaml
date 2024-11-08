@@ -4,21 +4,27 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/luabridge  # Substitua pelo nome do seu banco de dados
-    username: postgres  # Substitua pelo seu nome de usu·rio do PostgreSQL
+    username: postgres  # Substitua pelo seu nome de usu√°rio do PostgreSQL
     password: root  # Substitua pela sua senha do PostgreSQL
     driver-class-name: org.postgresql.Driver
 
     hikari:
-      maximum-pool-size: 10  # Tamanho m·ximo do pool de conexıes, ajuste conforme necess·rio
-      connection-timeout: 30000  # Timeout de conex„o (opcional)
+      maximum-pool-size: 10  # Tamanho m√°ximo do pool de conex√µes, ajuste conforme necess√°rio
+      connection-timeout: 30000  # Timeout de conex√£o (opcional)
       idle-timeout: 600000  # Timeout de inatividade (opcional)
 
   jpa:
     hibernate:
-      ddl-auto: update  # Define o comportamento de criaÁ„o/atualizaÁ„o do esquema (ajuste conforme necess·rio)
-      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+      ddl-auto: update  # Define o comportamento de cria√ß√£o/atualiza√ß√£o do esquema (ajuste conforme necess√°rio)
     show-sql: true  # Exibe as queries SQL no log
     properties:
       hibernate:
         format_sql: true  # Formata as queries SQL para facilitar a leitura
         dialect: org.hibernate.dialect.PostgreSQLDialect  # Dialeto do PostgreSQL
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type: TRACE

@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
+
 import java.util.UUID;
 @Entity
 @Data
@@ -17,8 +17,8 @@ public class LuaScriptEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    private String name;
-    private RouteType route;
+    private String route;
+    private RouteType method;
     private String script;
     @ManyToOne
     @JoinColumn(name = "api_entity_id")

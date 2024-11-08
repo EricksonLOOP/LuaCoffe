@@ -57,7 +57,7 @@ public class ApiServicesImpl implements ApiServices {
 
                 // Verificar se já existe uma rota com o mesmo nome e tipo
                 Optional<LuaScriptEntity> rotaIgual = luaScriptEntityList.stream()
-                        .filter(rota -> rota.getName().equals(criarRotaDTO.name()) && rota.getRoute().equals(criarRotaDTO.route()))
+                        .filter(rota -> rota.getRoute().equals(criarRotaDTO.name()) && rota.getRoute().equals(criarRotaDTO.route()))
                         .findFirst();
 
                 if (rotaIgual.isPresent()) {
@@ -66,8 +66,8 @@ public class ApiServicesImpl implements ApiServices {
 
                 // Criar a nova rota
                 LuaScriptEntity novoScript = LuaScriptEntity.builder()
-                        .route(RouteType.valueOf(criarRotaDTO.route()))
-                        .name(criarRotaDTO.name())
+                        .method(RouteType.valueOf(criarRotaDTO.route()))
+                        .route(criarRotaDTO.name())
                         .apiEntity(apiEntity)
                         .build();
 
@@ -103,9 +103,9 @@ public class ApiServicesImpl implements ApiServices {
             List<LuaScriptDTO> routes = new ArrayList<>();
             api.getRotas().stream()
                     .forEach(rota ->   routes.add(new LuaScriptDTO(
-                            rota.getName(),
+                            rota.getRoute(),
                             rota.getScript(),
-                            rota.getRoute().toString(),
+                            rota.getMethod().toString(),
                             rota.getId())));
 
                     ApiEntityDTO apiDTO = new ApiEntityDTO(

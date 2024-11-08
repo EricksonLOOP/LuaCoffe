@@ -9,5 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface LuaRepository extends JpaRepository<LuaScriptEntity, UUID> {
-    Optional<LuaScriptEntity> findByName(String name);
+    Optional<LuaScriptEntity> findByRoute(String route);
 }

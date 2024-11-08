@@ -102,12 +102,12 @@ public class LuaActions {
     public String executeLuaCode(String name, List<Map<String, Object>> params){
         try{
 
-            Optional<LuaScriptEntity> optionalLuaScriptEntity = luaRepository.findByName(name);
+            Optional<LuaScriptEntity> optionalLuaScriptEntity = luaRepository.findByRoute(name);
             if (optionalLuaScriptEntity.isEmpty()){
                 return "Script não encontrado!";
             }
             String script = optionalLuaScriptEntity.get().getScript();
-            String scriptName = optionalLuaScriptEntity.get().getName();
+            String scriptName = optionalLuaScriptEntity.get().getRoute();
             String complete = ReplaceWaitingValues(script, params);
             LuaValue chunk = globals.load(complete, scriptName);
             LuaValue response = chunk.call();
