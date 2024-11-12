@@ -9,5 +9,7 @@ public enum RouteType {
     TRACER,
     OPTIONS,
     HEAD,
-    CONNECT
+    CONNECT,
+    SCRIPT,
+    DATABASE
 }

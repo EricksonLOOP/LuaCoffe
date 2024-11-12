@@ -52,6 +52,8 @@ public class LuaServicesImpl implements LuaServices{
         } catch (LuaError e) {
             // Handle Lua-specific exceptions
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro na execução do script Lua: " + e.getMessage());
+        }catch(NullPointerException e){
+            return ResponseEntity.badRequest().body("O arquivo não tem um script para ser executado");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -67,7 +69,7 @@ public class LuaServicesImpl implements LuaServices{
             }
             LuaScriptEntity novoscript = LuaScriptEntity.builder()
                     .route(luaScriptEntity.getRoute())
-                    .method(RouteType.valueOf(luaScriptEntity.getRoute()))
+                    .method(luaScriptEntity.getMethod())
                     .script(luaScriptEntity.getScript())
                     .build();
             return ResponseEntity.ok().body("Script Criado com sucesso! Script: "+ luaRepository.save(novoscript));

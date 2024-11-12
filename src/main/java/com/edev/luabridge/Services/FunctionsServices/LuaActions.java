@@ -1,6 +1,7 @@
 package com.edev.luabridge.Services.FunctionsServices;
 
 import com.edev.luabridge.Entities.LuaScriptEntity.LuaScriptEntity;
+import com.edev.luabridge.Models.RouteTypeModel.RouteType;
 import com.edev.luabridge.Repositories.LuaRepository;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
@@ -8,6 +9,8 @@ import org.luaj.vm2.LuaValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
+import java.sql.DriverManager;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -69,6 +72,12 @@ public class LuaActions {
         // Adiciona o restante do script após as substituições
         matcher.appendTail(sb);
         return sb.toString();
+    }
+    public DataSource SetDb(List<LuaScriptEntity> scripts){
+       Optional<LuaScriptEntity> databseScripts = scripts.stream()
+               .filter(script -> script.getRoute().equals("dbConfig") && script.getMethod().equals(RouteType.DATABASE))
+               .findFirst();
+       return null;
     }
 
 
