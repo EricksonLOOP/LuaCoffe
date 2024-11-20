@@ -4,6 +4,7 @@ import com.edev.luabridge.DTOs.RequestDTO.RequestDTO;
 import com.edev.luabridge.DTOs.ScriptDTO.ScriptDTO;
 import com.edev.luabridge.Entities.LuaScriptEntity.LuaScriptEntity;
 import com.edev.luabridge.Models.RouteTypeModel.RouteType;
+import com.edev.luabridge.Repositories.ApiRepository;
 import com.edev.luabridge.Repositories.LuaRepository;
 import com.edev.luabridge.Services.FunctionsServices.LuaActions;
 import org.luaj.vm2.Globals;
@@ -27,11 +28,14 @@ public class LuaServicesImpl implements LuaServices{
     @Autowired
     final private LuaRepository luaRepository;
     @Autowired
+    final private ApiRepository apiRepository;
+    @Autowired
     final private LuaActions luaActions;
 
-    public LuaServicesImpl(Globals globals, LuaRepository luaRepository, LuaActions luaActions) {
+    public LuaServicesImpl(Globals globals, LuaRepository luaRepository, ApiRepository apiRepository, LuaActions luaActions) {
         this.globals = globals;
         this.luaRepository = luaRepository;
+        this.apiRepository = apiRepository;
         this.luaActions = luaActions;
     }
 
@@ -82,7 +86,8 @@ public class LuaServicesImpl implements LuaServices{
     public ResponseEntity<?> deletarTudo() {
         try{
             List<LuaScriptEntity> optionalList = luaRepository.findAll();
-            luaRepository.deleteAll(optionalList);
+            apiRepository.deleteAll();
+            luaRepository.deleteAll();
             return ResponseEntity.ok("Tudo Deletado meu Chapa!");
         } catch (Exception e) {
             throw new RuntimeException(e);

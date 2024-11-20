@@ -23,7 +23,7 @@ public class LuaController {
         this.luaServices = luaServices;
     }
 
-    @PostMapping("/execute/script")
+    @GetMapping("/execute/script")
     public ResponseEntity<?> RetornoScript(@RequestBody RequestDTO requestDTO)  {
         return luaServices.runScript(requestDTO);
     }

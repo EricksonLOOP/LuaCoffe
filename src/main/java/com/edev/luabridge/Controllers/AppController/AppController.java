@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/luabridge/")
+@RequestMapping("/luabridge")
 public class AppController {
     private  final AppServices appServices;
 
@@ -14,8 +14,8 @@ public class AppController {
         this.appServices = appServices;
     }
     @GetMapping("/get/api")
-    public ResponseEntity<?> getController(@RequestBody RequestDTO requestDTO){
-    return appServices.getController(requestDTO);
+    public ResponseEntity<?> getController(@RequestParam String apiToken, @RequestParam String method, @RequestParam String route){
+    return appServices.getController(apiToken, method, route);
     }
     @PostMapping("/post/api")
     public ResponseEntity<?> postController(@RequestBody RequestDTO requestDTO){
