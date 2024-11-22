@@ -26,6 +26,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ApiServicesImpl implements ApiServices {
@@ -188,6 +189,45 @@ public class ApiServicesImpl implements ApiServices {
 
         }catch (Exception e){
             return ResponseEntity.internalServerError().body("Erro interno: "+e.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> deleteApi(UUID user, UUID apiId) {
+        try {
+            Optional<UserEntity> optionalUserEntity = userRepository.findById(user);
+            if (optionalUserEntity.isEmpty()){
+                return ResponseEntity.badRequest().body("Usuário não encontrado");
+            }
+            UserEntity usuario = optionalUserEntity.get();
+            Optional<ApiEntity> optionalApiEntity = usuario.getApis().stream()
+                    .filter(apiEntity -> apiEntity.getId().equals(apiId)).findFirst();
+            if (optionalUserEntity.isEmpty()){
+                return ResponseEntity.badRequest().body("Api não encontrada.");
+            }
+            ApiEntity oldapi = optionalApiEntity.get();
+            usuario.getApis().remove(oldapi);
+            apiRepository.delete(oldapi);
+            userRepository.save(usuario);
+            List<ApiRetornoDTO> listApi = new ArrayList<>();
+            usuario.getApis().forEach(api -> {
+                if (!api.getId().equals(oldapi.getId())){
+                    listApi.add( ApiRetornoDTO.builder()
+                            .id(api.getId())
+                            .name(api.getName())
+                            .token(api.getApiToken())
+                            .build());
+                }
+            });
+            RetornoLoginDTO nRetorno = RetornoLoginDTO.builder()
+                    .name(usuario.getName())
+                    .id(usuario.getId())
+                    .email(usuario.getEmail())
+                    .apis(listApi)
+                    .build();
+            return ResponseEntity.ok().body(nRetorno);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

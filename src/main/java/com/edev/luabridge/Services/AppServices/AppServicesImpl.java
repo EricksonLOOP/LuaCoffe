@@ -12,10 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AppServicesImpl implements AppServices {
@@ -29,7 +26,7 @@ public class AppServicesImpl implements AppServices {
     }
 
     @Override
-    public ResponseEntity<?> getController(String apiToken, String method, String route) {
+    public ResponseEntity<?> getController(String apiToken, String method, String route, List<Map<String, Object>> params) {
         try {
             if (!method.equalsIgnoreCase("GET")){
                 return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
@@ -48,7 +45,7 @@ public class AppServicesImpl implements AppServices {
                     .findFirst();
 
             if (script.isPresent()) {
-                RequestDTO nreq = new RequestDTO(route, apiToken, method, Collections.emptyList());
+                RequestDTO nreq = new RequestDTO(route, apiToken, method, params);
                 return luaServices.runScript(nreq);
             }
 
@@ -142,6 +139,38 @@ public class AppServicesImpl implements AppServices {
             ApiEntity api = optionalApiEntity.get();
             Optional<LuaScriptEntity> script = api.getRotas().stream()
                     .filter(rota -> rota.getRoute().equals(RouteType.valueOf(requestDTO.route()))
+                            && rota.getRoute().equals(requestDTO.route()))
+                    .findFirst();
+
+            if (script.isPresent()) {
+                return luaServices.runScript(requestDTO);
+            }
+
+            return ResponseEntity.badRequest().body("Script não encontrado para a rota especificada.");
+        } catch (Exception e) {
+            // Aqui você pode logar a exceção
+            // logger.error("Erro ao processar request: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro interno ao processar a solicitação.");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> scriptController(RequestDTO requestDTO) {
+        try {
+            if (!requestDTO.method().equalsIgnoreCase("SCRIPT")){
+                return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+                        .body("Método não permitido. Esperado: POST => SCRIPT");
+            }
+
+            Optional<ApiEntity> optionalApiEntity = apiRepository.findByApiToken(requestDTO.apiToken());
+            if (optionalApiEntity.isEmpty()) {
+                return ResponseEntity.badRequest().body("Token inválido ou não encontrado.");
+            }
+
+            ApiEntity api = optionalApiEntity.get();
+            Optional<LuaScriptEntity> script = api.getRotas().stream()
+                    .filter(rota -> rota.getMethod().equals(RouteType.valueOf(requestDTO.method()))
                             && rota.getRoute().equals(requestDTO.route()))
                     .findFirst();
 

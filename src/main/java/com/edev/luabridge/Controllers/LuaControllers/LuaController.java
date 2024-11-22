@@ -35,7 +35,7 @@ public class LuaController {
     public ResponseEntity<?> deletarTudo(){
         return luaServices.deletarTudo();
     }
-    @PatchMapping("/save/{id}")
+    @PutMapping("/save/{id}")
     public ResponseEntity<?> atualizarScript(@PathVariable("id") UUID id, @RequestBody ScriptDTO scriptDTO){
         return luaServices.atualizarScript(id, scriptDTO);
     }

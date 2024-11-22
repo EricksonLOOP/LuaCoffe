@@ -8,10 +8,9 @@ import com.edev.luabridge.DTOs.UserDTOs.LoginUserDTO.LoginUserDTO;
 import com.edev.luabridge.Entities.APIEntity.ApiEntity;
 import com.edev.luabridge.Services.ApiServices.ApiServices;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/actions")
@@ -25,6 +24,10 @@ public class ApiController {
     @PostMapping("/create/api")
     public ResponseEntity<?> criarApi(@RequestBody CriarApiDTO criarApiDTO){
         return apiServices.criarApi(criarApiDTO);
+    }
+    @DeleteMapping("delete/{userId}/{apiId}")
+    public ResponseEntity<?> deleteApi(@PathVariable("userId")UUID user, @PathVariable("apiId") UUID apiId){
+        return apiServices.deleteApi(user, apiId);
     }
     @PostMapping("/add/rota")
     public ResponseEntity<?> criarRota(@RequestBody CriarRotaDTO criarRotaDTO){

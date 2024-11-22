@@ -24,7 +24,7 @@ public class ApiEntity {
     @ManyToOne
     @JoinTable(name = "user_entity_id")
     private UserEntity user;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LuaScriptEntity> rotas;
     public ApiEntity(){
 

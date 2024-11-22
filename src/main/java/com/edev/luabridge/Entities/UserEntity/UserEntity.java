@@ -23,6 +23,6 @@ public class UserEntity {
     private String email;
     private String password;
     private String cargo;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ApiEntity> apis;
 }

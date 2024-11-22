@@ -9,6 +9,8 @@ import com.edev.luabridge.Entities.APIEntity.ApiEntity;
 import com.edev.luabridge.Entities.LuaScriptEntity.LuaScriptEntity;
 import org.springframework.http.ResponseEntity;
 
+import java.util.UUID;
+
 public interface ApiServices {
     ResponseEntity<?> criarApi(CriarApiDTO criarApiDTO);
     ResponseEntity<?> criarRota(CriarRotaDTO criarRotaDTO);
@@ -16,4 +18,6 @@ public interface ApiServices {
     ResponseEntity<?> getApi(LoginDTO loginDTO);
 ResponseEntity<?> loginUser(LoginUserDTO loginUserDTO);
     ResponseEntity<?> createUser(CreateUserDTO createUserDTO);
+
+    ResponseEntity<?> deleteApi(UUID user, UUID apiId);
 }
