@@ -5,21 +5,33 @@ import com.edev.luabridge.Services.AppServices.AppServices;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 @RestController
-@RequestMapping("/luabridge/")
+@RequestMapping("/luacoffe")
 public class AppController {
     private  final AppServices appServices;
 
     public AppController(AppServices appServices) {
         this.appServices = appServices;
     }
+
     @GetMapping("/get/api")
-    public ResponseEntity<?> getController(@RequestBody RequestDTO requestDTO){
-    return appServices.getController(requestDTO);
+    @CrossOrigin(origins = "http://localhost:5173")
+    public ResponseEntity<?> getController(@RequestParam String apiToken, @RequestParam String method, @RequestParam String route, @RequestParam Map<String, Object> objects){
+        //@RequestParam List<Map<String, Object>> param
+
+    return appServices.getController(apiToken, method, route, objects);
     }
     @PostMapping("/post/api")
     public ResponseEntity<?> postController(@RequestBody RequestDTO requestDTO){
         return appServices.postController(requestDTO);
+    }
+    @PostMapping("/script/api")
+    public ResponseEntity<?> scriptController(@RequestBody RequestDTO requestDTO){
+        return appServices.scriptController(requestDTO);
     }
     @PutMapping("/put/api")
     public ResponseEntity<?> putController(@RequestBody RequestDTO requestDTO){

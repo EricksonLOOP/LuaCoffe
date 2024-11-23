@@ -1,6 +1,7 @@
 package com.edev.luabridge.Entities.APIEntity;
 
 import com.edev.luabridge.Entities.LuaScriptEntity.LuaScriptEntity;
+import com.edev.luabridge.Entities.UserEntity.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,11 @@ public class ApiEntity {
     private UUID id;
     private String name;
     private String apiToken;
-    @OneToMany
+    private StatusEnum status;
+    @ManyToOne
+    @JoinTable(name = "user_entity_id")
+    private UserEntity user;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LuaScriptEntity> rotas;
     public ApiEntity(){
 

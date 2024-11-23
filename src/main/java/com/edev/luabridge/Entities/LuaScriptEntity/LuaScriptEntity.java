@@ -20,8 +20,8 @@ public class LuaScriptEntity {
     private String route;
     private RouteType method;
     private String script;
-    @ManyToOne
-    @JoinColumn(name = "api_entity_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "api_entity_id" )
     private ApiEntity apiEntity;
     public LuaScriptEntity(){
 

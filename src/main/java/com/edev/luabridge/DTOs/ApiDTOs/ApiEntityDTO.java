@@ -1,11 +1,8 @@
-package com.edev.luabridge.DTOs.ApiEntityDTO;
+package com.edev.luabridge.DTOs.ApiDTOs;
 
 import com.edev.luabridge.DTOs.LuaScriptDTO.LuaScriptDTO;
-import com.edev.luabridge.Entities.LuaScriptEntity.LuaScriptEntity;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 
 import java.util.List;
 import java.util.UUID;
