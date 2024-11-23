@@ -7,6 +7,7 @@ import com.edev.luabridge.Entities.LuaScriptEntity.LuaScriptEntity;
 import com.edev.luabridge.Models.RouteTypeModel.RouteType;
 import com.edev.luabridge.Repositories.ApiRepository;
 import com.edev.luabridge.Services.LuaServices.LuaServices;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class AppServicesImpl implements AppServices {
     }
 
     @Override
-    public ResponseEntity<?> getController(String apiToken, String method, String route, List<Map<String, Object>> params) {
+    public ResponseEntity<?> getController(String apiToken, String method, String route, Map<String, Object> objects) {
         try {
             if (!method.equalsIgnoreCase("GET")){
                 return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
@@ -45,7 +46,16 @@ public class AppServicesImpl implements AppServices {
                     .findFirst();
 
             if (script.isPresent()) {
-                RequestDTO nreq = new RequestDTO(route, apiToken, method, params);
+                JSONObject objParams = new JSONObject(objects.get("objects").toString());
+                List<Map<String, Object>> objectList = new ArrayList<>();
+                Map<String,Object> fromJsonToMap = objParams.toMap();
+
+                for (Map.Entry<String, Object> entry : fromJsonToMap.entrySet()) {
+                    Map<String, Object> singleMap = new HashMap<>();
+                    singleMap.put(entry.getKey(), entry.getValue());
+                    objectList.add(singleMap);
+                }
+                RequestDTO nreq = new RequestDTO(route, apiToken, method, objectList);
                 return luaServices.runScript(nreq);
             }
 

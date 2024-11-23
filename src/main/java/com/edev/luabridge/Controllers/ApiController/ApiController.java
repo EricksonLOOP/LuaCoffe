@@ -1,13 +1,17 @@
 package com.edev.luabridge.Controllers.ApiController;
 
+import com.edev.luabridge.Configuration.Security.jwt.JwtUtil;
 import com.edev.luabridge.DTOs.ApiDTOs.CriarApiDTO;
 import com.edev.luabridge.DTOs.CriarRotaDTO.CriarRotaDTO;
 import com.edev.luabridge.DTOs.LoginDTO.LoginDTO;
+import com.edev.luabridge.DTOs.ScriptDTO.ScriptDTO;
 import com.edev.luabridge.DTOs.UserDTOs.CreateUserDTO.CreateUserDTO;
 import com.edev.luabridge.DTOs.UserDTOs.LoginUserDTO.LoginUserDTO;
 import com.edev.luabridge.Entities.APIEntity.ApiEntity;
 import com.edev.luabridge.Services.ApiServices.ApiServices;
+import com.edev.luabridge.Services.LuaServices.LuaServices;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -16,10 +20,13 @@ import java.util.UUID;
 @RequestMapping("/api/actions")
 public class ApiController {
     private final ApiServices apiServices;
+    private  final LuaServices luaServices;
 
-    public ApiController(ApiServices apiServices) {
+    public ApiController(ApiServices apiServices, LuaServices luaServices) {
         this.apiServices = apiServices;
+        this.luaServices = luaServices;
     }
+
 
     @PostMapping("/create/api")
     public ResponseEntity<?> criarApi(@RequestBody CriarApiDTO criarApiDTO){
@@ -28,6 +35,10 @@ public class ApiController {
     @DeleteMapping("delete/{userId}/{apiId}")
     public ResponseEntity<?> deleteApi(@PathVariable("userId")UUID user, @PathVariable("apiId") UUID apiId){
         return apiServices.deleteApi(user, apiId);
+    }
+    @PutMapping("/script/save/{scriptId}")
+    public ResponseEntity<?> atualizarScript(@PathVariable("scriptId") UUID scriptId, @RequestBody ScriptDTO scriptDTO){
+        return luaServices.atualizarScript(scriptId, scriptDTO);
     }
     @PostMapping("/add/rota")
     public ResponseEntity<?> criarRota(@RequestBody CriarRotaDTO criarRotaDTO){

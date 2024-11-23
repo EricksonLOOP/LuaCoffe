@@ -7,5 +7,5 @@ import lombok.Builder;
 import java.util.List;
 import java.util.UUID;
 @Builder
-public record RetornoLoginDTO (@NotNull UUID id, @NotNull String name, @NotNull String email, @NotNull List<ApiRetornoDTO> apis) {
+public record RetornoLoginDTO (@NotNull UUID id, @NotNull String name, @NotNull String email, @NotNull List<ApiRetornoDTO> apis, @NotNull String token) {
 }

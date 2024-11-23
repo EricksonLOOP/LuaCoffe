@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/luabridge")
+@RequestMapping("/luacoffe")
 public class AppController {
     private  final AppServices appServices;
 
@@ -20,9 +20,10 @@ public class AppController {
 
     @GetMapping("/get/api")
     @CrossOrigin(origins = "http://localhost:5173")
-    public ResponseEntity<?> getController(@RequestParam String apiToken, @RequestParam String method, @RequestParam String route){
+    public ResponseEntity<?> getController(@RequestParam String apiToken, @RequestParam String method, @RequestParam String route, @RequestParam Map<String, Object> objects){
         //@RequestParam List<Map<String, Object>> param
-    return appServices.getController(apiToken, method, route, Collections.emptyList());
+
+    return appServices.getController(apiToken, method, route, objects);
     }
     @PostMapping("/post/api")
     public ResponseEntity<?> postController(@RequestBody RequestDTO requestDTO){

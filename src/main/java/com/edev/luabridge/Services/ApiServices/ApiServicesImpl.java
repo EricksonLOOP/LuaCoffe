@@ -1,5 +1,6 @@
 package com.edev.luabridge.Services.ApiServices;
 
+import com.edev.luabridge.Configuration.Security.jwt.JwtUtil;
 import com.edev.luabridge.DTOs.ApiDTOs.ApiEntityDTO;
 import com.edev.luabridge.DTOs.ApiDTOs.ApiRetornoDTO;
 import com.edev.luabridge.DTOs.ApiDTOs.CriarApiDTO;
@@ -20,6 +21,10 @@ import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -33,13 +38,19 @@ public class ApiServicesImpl implements ApiServices {
     @Autowired
     private final ApiRepository apiRepository;
     @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
     private final LuaRepository luaRepository;
     @Autowired
     private  final UserRepository userRepository;
-    public ApiServicesImpl(ApiRepository apiRepository, LuaRepository luaRepository, UserRepository userRepository) {
+    private final AuthenticationManager authenticationManager;
+    final private JwtUtil jwtUtil;
+    public ApiServicesImpl(ApiRepository apiRepository, LuaRepository luaRepository, UserRepository userRepository, AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
         this.apiRepository = apiRepository;
         this.luaRepository = luaRepository;
         this.userRepository = userRepository;
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -150,27 +161,45 @@ public class ApiServicesImpl implements ApiServices {
 
     @Override
     public ResponseEntity<?> loginUser(LoginUserDTO loginUserDTO) {
-        try{
+        try {
             Optional<UserEntity> optionalUserEntity = userRepository.findByEmail(loginUserDTO.email());
-            if (optionalUserEntity.isEmpty()){
-                return ResponseEntity.badRequest().body("Erro ao tentar fazer login, usuário não encontrado.");
-            }
-            List<ApiRetornoDTO> listApi = new ArrayList<>();
-            UserEntity user = optionalUserEntity.get();
-            user.getApis().forEach(api -> listApi.add( ApiRetornoDTO.builder()
+            if (optionalUserEntity.isPresent()) {
+                UserEntity user = optionalUserEntity.get();
+
+
+                if (passwordEncoder.matches(loginUserDTO.password(), user.getPassword())) {
+                    Authentication authentication = authenticationManager.authenticate(
+                            new UsernamePasswordAuthenticationToken(user.getEmail(), loginUserDTO.password())
+                    );
+
+
+                    String token = jwtUtil.createToken(user);
+
+
+                    List<ApiRetornoDTO> listApi = new ArrayList<>();
+                    user.getApis().forEach(api -> listApi.add(ApiRetornoDTO.builder()
                             .id(api.getId())
                             .name(api.getName())
                             .token(api.getApiToken())
-                    .build()));
-            RetornoLoginDTO nRetorno = RetornoLoginDTO.builder()
-                    .name(user.getName())
-                    .id(user.getId())
-                    .email(user.getEmail())
-                    .apis(listApi)
-                    .build();
-            return ResponseEntity.ok(nRetorno);
-        }catch (Exception e){
-            return  ResponseEntity.internalServerError().body(e.getMessage());
+                            .build()));
+
+                    RetornoLoginDTO nRetorno = RetornoLoginDTO.builder()
+                            .name(user.getName())
+                            .id(user.getId())
+                            .email(user.getEmail())
+                            .apis(listApi)
+                            .token(token)
+                            .build();
+
+                    return ResponseEntity.ok(nRetorno);
+                } else {
+                    return ResponseEntity.badRequest().body("Erro: Senha incorreta.");
+                }
+            }
+            return ResponseEntity.badRequest().body("Erro ao tentar fazer login, usuário não encontrado.");
+
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro interno: " + e.getMessage());
         }
     }
 
@@ -179,16 +208,21 @@ public class ApiServicesImpl implements ApiServices {
         try {
             Optional<UserEntity> optionalUserEntity = userRepository.findByEmail(createUserDTO.email());
             if (optionalUserEntity.isPresent()){
-                return ResponseEntity.badRequest().body("Email ja registrado.");
+                return ResponseEntity.badRequest().body("Email já registrado.");
             }
+
+            // Criptografando a senha com o BCrypt
+            String encryptedPassword = passwordEncoder.encode(createUserDTO.password());
+
             UserEntity nUser = UserEntity.builder()
                     .email(createUserDTO.email())
-                    .password(createUserDTO.password())
+                    .password(encryptedPassword)
                     .build();
+
             return ResponseEntity.ok(userRepository.save(nUser));
 
-        }catch (Exception e){
-            return ResponseEntity.internalServerError().body("Erro interno: "+e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro interno: " + e.getMessage());
         }
     }
 

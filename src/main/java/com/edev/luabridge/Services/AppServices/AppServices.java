@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface AppServices {
-    ResponseEntity<?> getController(String apiToken, String method, String route, List<Map<String, Object>> params);
+    ResponseEntity<?> getController(String apiToken, String method, String route, Map<String, Object> params);
     ResponseEntity<?> postController(RequestDTO requestDTO);
     ResponseEntity<?> putController(RequestDTO requestDTO);
     ResponseEntity<?> deleteController(RequestDTO requestDTO);
