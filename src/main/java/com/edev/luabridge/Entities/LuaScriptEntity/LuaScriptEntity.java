@@ -19,6 +19,7 @@ public class LuaScriptEntity {
     private UUID id;
     private String route;
     private RouteType method;
+    @Column(columnDefinition = "TEXT")
     private String script;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "api_entity_id" )

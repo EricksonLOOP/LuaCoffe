@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class LuaConfiguration {
     @Bean
     public Globals luaGlobais(){
+
         return JsePlatform.standardGlobals();
     }
 }

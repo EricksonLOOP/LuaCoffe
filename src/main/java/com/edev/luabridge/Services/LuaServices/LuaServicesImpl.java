@@ -3,21 +3,22 @@ package com.edev.luabridge.Services.LuaServices;
 import com.edev.luabridge.DTOs.RequestDTO.RequestDTO;
 import com.edev.luabridge.DTOs.ScriptDTO.ScriptDTO;
 import com.edev.luabridge.Entities.LuaScriptEntity.LuaScriptEntity;
-import com.edev.luabridge.Models.RouteTypeModel.RouteType;
+import com.edev.luabridge.LuaLibs.Libs.Libs;
+import com.edev.luabridge.LuaLibs.LuaDB.LuaDB;
+import com.edev.luabridge.LuaLibs.TesteLibs.TesteLibs;
 import com.edev.luabridge.Repositories.ApiRepository;
 import com.edev.luabridge.Repositories.LuaRepository;
+import com.edev.luabridge.LuaLibs.LuaDB.DataBaseManager;
 import com.edev.luabridge.Services.FunctionsServices.LuaActions;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
+import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,7 +32,7 @@ public class LuaServicesImpl implements LuaServices{
     final private ApiRepository apiRepository;
     @Autowired
     final private LuaActions luaActions;
-
+    private DataBaseManager dataBaseManager = new DataBaseManager();
     public LuaServicesImpl(Globals globals, LuaRepository luaRepository, ApiRepository apiRepository, LuaActions luaActions) {
         this.globals = globals;
         this.luaRepository = luaRepository;
@@ -50,6 +51,8 @@ public class LuaServicesImpl implements LuaServices{
             String script = optionalLuaScriptEntity.get().getScript();
             String scriptName = optionalLuaScriptEntity.get().getRoute();
             String complete = luaActions.ReplaceWaitingValues(script, requestDTO.params());
+            globals.set("luacoffe", new LuaTable());
+            globals.get("luacoffe").set("libs", new Libs().call());
             LuaValue chunk = globals.load(complete, scriptName);
             LuaValue response = chunk.call();
             return ResponseEntity.ok().body(response.toString());

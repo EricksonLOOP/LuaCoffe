@@ -97,7 +97,7 @@ public class AppServicesImpl implements AppServices {
             // Aqui você pode logar a exceção
             // logger.error("Erro ao processar request: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro interno ao processar a solicitação.");
+                    .body("Erro interno ao processar a solicitação. Error: "+e.getMessage());
         }
     }
 

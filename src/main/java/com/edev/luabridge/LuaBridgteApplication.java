@@ -1,5 +1,8 @@
 package com.edev.luabridge;
 
+import com.edev.luabridge.LuaLibs.LuaDB.LuaDB;
+import org.luaj.vm2.Globals;
+import org.luaj.vm2.LuaValue;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
