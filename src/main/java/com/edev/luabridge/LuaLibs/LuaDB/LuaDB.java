@@ -24,6 +24,7 @@ public class LuaDB extends ZeroArgFunction {
         library.set("connect", new connect());
         library.set("executeQuery", new executeQuery());
         library.set("executeUpdate", new executeUpdate());
+        library.set("close", new closeConnection());
 
         return library;
     }

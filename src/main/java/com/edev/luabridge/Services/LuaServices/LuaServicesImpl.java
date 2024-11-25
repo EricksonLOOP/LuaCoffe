@@ -4,8 +4,6 @@ import com.edev.luabridge.DTOs.RequestDTO.RequestDTO;
 import com.edev.luabridge.DTOs.ScriptDTO.ScriptDTO;
 import com.edev.luabridge.Entities.LuaScriptEntity.LuaScriptEntity;
 import com.edev.luabridge.LuaLibs.Libs.Libs;
-import com.edev.luabridge.LuaLibs.LuaDB.LuaDB;
-import com.edev.luabridge.LuaLibs.TesteLibs.TesteLibs;
 import com.edev.luabridge.Repositories.ApiRepository;
 import com.edev.luabridge.Repositories.LuaRepository;
 import com.edev.luabridge.LuaLibs.LuaDB.DataBaseManager;
@@ -26,6 +24,7 @@ import java.util.UUID;
 @Service
 public class LuaServicesImpl implements LuaServices{
     final private Globals globals;
+
     @Autowired
     final private LuaRepository luaRepository;
     @Autowired
@@ -51,8 +50,9 @@ public class LuaServicesImpl implements LuaServices{
             String script = optionalLuaScriptEntity.get().getScript();
             String scriptName = optionalLuaScriptEntity.get().getRoute();
             String complete = luaActions.ReplaceWaitingValues(script, requestDTO.params());
-            globals.set("luacoffe", new LuaTable());
-            globals.get("luacoffe").set("libs", new Libs().call());
+            LuaTable luacoffe = new LuaTable();
+            luacoffe.set("libs", new Libs().call());
+            globals.set("luacoffe", luacoffe);
             LuaValue chunk = globals.load(complete, scriptName);
             LuaValue response = chunk.call();
             return ResponseEntity.ok().body(response.toString());

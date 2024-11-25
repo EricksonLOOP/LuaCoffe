@@ -30,6 +30,7 @@ public class DataBaseManager {
     public void close() throws Exception {
         if (connection != null) {
             connection.close();
+            isConnected = false;
         }
     }
 
