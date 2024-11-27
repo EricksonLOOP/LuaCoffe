@@ -1,6 +1,6 @@
-package com.edev.luabridge.LuaLibs.Libs;
+package com.edev.luabridge.Modules.LuaLibs.Libs;
 
-import com.edev.luabridge.LuaLibs.LuaDB.LuaDB;
+import com.edev.luabridge.Modules.LuaLibs.LuaDB.LuaDB;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.ZeroArgFunction;

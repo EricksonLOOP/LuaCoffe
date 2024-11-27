@@ -56,5 +56,5 @@ public class ApiController {
     public ResponseEntity<?> loginUser(@RequestBody LoginUserDTO loginUserDTO){
         return apiServices.loginUser(loginUserDTO);
     }
-    
+
 }

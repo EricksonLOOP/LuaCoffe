@@ -1,7 +1,17 @@
 spring:
   application:
     name: LuaBridge
-
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ericksonagust45@gmail.com
+    password: uwlk tfup xehr etck
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   datasource:
     url: jdbc:postgresql://localhost:5432/luacoffe
     username: postgres
@@ -10,8 +20,8 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update  # Pode ser "none", "update", "create", "create-drop"
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true  # Exibe as consultas SQL no log
+    show-sql: true
