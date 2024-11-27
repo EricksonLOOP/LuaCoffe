@@ -1,9 +1,8 @@
-package com.edev.luabridge.Services.AppServices;
+package com.edev.luabridge.Modules.APP;
 
 import com.edev.luabridge.DTOs.RequestDTO.RequestDTO;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
 import java.util.Map;
 
 public interface AppServices {

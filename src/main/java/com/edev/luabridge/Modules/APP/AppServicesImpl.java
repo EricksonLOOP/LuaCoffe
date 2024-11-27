@@ -1,12 +1,11 @@
-package com.edev.luabridge.Services.AppServices;
+package com.edev.luabridge.Modules.APP;
 
-import com.edev.luabridge.DTOs.LuaScriptDTO.LuaScriptDTO;
 import com.edev.luabridge.DTOs.RequestDTO.RequestDTO;
 import com.edev.luabridge.Entities.APIEntity.ApiEntity;
 import com.edev.luabridge.Entities.LuaScriptEntity.LuaScriptEntity;
 import com.edev.luabridge.Models.RouteTypeModel.RouteType;
 import com.edev.luabridge.Repositories.ApiRepository;
-import com.edev.luabridge.Services.LuaServices.LuaServices;
+import com.edev.luabridge.Modules.LuaServices.LuaServices;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

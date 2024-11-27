@@ -1,4 +1,4 @@
-package com.edev.luabridge.Services.LuaServices;
+package com.edev.luabridge.Modules.LuaServices;
 
 import com.edev.luabridge.DTOs.RequestDTO.RequestDTO;
 import com.edev.luabridge.DTOs.ScriptDTO.ScriptDTO;
@@ -7,7 +7,7 @@ import com.edev.luabridge.Modules.LuaLibs.Libs.Libs;
 import com.edev.luabridge.Repositories.ApiRepository;
 import com.edev.luabridge.Repositories.LuaRepository;
 import com.edev.luabridge.Modules.LuaLibs.LuaDB.DataBaseManager;
-import com.edev.luabridge.Services.FunctionsServices.LuaActions;
+import com.edev.luabridge.Modules.FunctionsServices.LuaActions;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaTable;

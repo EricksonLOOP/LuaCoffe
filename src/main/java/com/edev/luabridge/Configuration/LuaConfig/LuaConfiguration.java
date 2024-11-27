@@ -1,4 +1,4 @@
-package com.edev.luabridge.Configuration;
+package com.edev.luabridge.Configuration.LuaConfig;
 
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.lib.jse.JsePlatform;

@@ -1,4 +1,4 @@
-package com.edev.luabridge.Services.ApiServices;
+package com.edev.luabridge.Modules.API;
 
 import com.edev.luabridge.Configuration.Security.jwt.JwtUtil;
 import com.edev.luabridge.DTOs.ApiDTOs.ApiEntityDTO;
@@ -17,7 +17,6 @@ import com.edev.luabridge.Models.RouteTypeModel.RouteType;
 import com.edev.luabridge.Repositories.ApiRepository;
 import com.edev.luabridge.Repositories.LuaRepository;
 import com.edev.luabridge.Repositories.UserRepository;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

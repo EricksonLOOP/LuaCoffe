@@ -8,6 +8,5 @@ public class LuaBridgteApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(LuaBridgteApplication.class, args);
-
 	}
 }
