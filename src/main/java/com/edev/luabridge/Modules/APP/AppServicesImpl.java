@@ -103,7 +103,7 @@ public class AppServicesImpl implements AppServices {
     @Override
     public ResponseEntity<?> putController(RequestDTO requestDTO) {
         try {
-            if (!requestDTO.route().equalsIgnoreCase("PUT")){
+            if (!requestDTO.method().equalsIgnoreCase("PUT")){
                 return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
                         .body("Método não permitido. Esperado: PUT");
             }
@@ -115,7 +115,7 @@ public class AppServicesImpl implements AppServices {
 
             ApiEntity api = optionalApiEntity.get();
             Optional<LuaScriptEntity> script = api.getRotas().stream()
-                    .filter(rota -> rota.getRoute().equals(RouteType.valueOf(requestDTO.route()))
+                    .filter(rota -> rota.getMethod().equals(RouteType.valueOf(requestDTO.method()))
                             && rota.getRoute().equals(requestDTO.route()))
                     .findFirst();
 
@@ -135,7 +135,7 @@ public class AppServicesImpl implements AppServices {
     @Override
     public ResponseEntity<?> deleteController(RequestDTO requestDTO) {
         try {
-            if (!requestDTO.route().equalsIgnoreCase("DELETE")){
+            if (!requestDTO.method().equalsIgnoreCase("DELETE")){
                 return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
                         .body("Método não permitido. Esperado: DELETE");
             }
@@ -147,7 +147,7 @@ public class AppServicesImpl implements AppServices {
 
             ApiEntity api = optionalApiEntity.get();
             Optional<LuaScriptEntity> script = api.getRotas().stream()
-                    .filter(rota -> rota.getRoute().equals(RouteType.valueOf(requestDTO.route()))
+                    .filter(rota -> rota.getMethod().equals(RouteType.valueOf(requestDTO.method()))
                             && rota.getRoute().equals(requestDTO.route()))
                     .findFirst();
 
