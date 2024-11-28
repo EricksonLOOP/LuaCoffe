@@ -1,12 +1,10 @@
 package com.edev.luabridge.Controllers.AppController;
 
 import com.edev.luabridge.DTOs.RequestDTO.RequestDTO;
-import com.edev.luabridge.Services.AppServices.AppServices;
+import com.edev.luabridge.Modules.APP.AppServices;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 @RestController

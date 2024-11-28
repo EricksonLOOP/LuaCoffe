@@ -1,4 +1,4 @@
-package com.edev.luabridge.LuaLibs.LuaDB;
+package com.edev.luabridge.Modules.LuaLibs.LuaDB;
 
 import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaValue;

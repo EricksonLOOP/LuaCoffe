@@ -1,4 +1,4 @@
-package com.edev.luabridge.Services.ApiServices;
+package com.edev.luabridge.Modules.API;
 
 import com.edev.luabridge.Configuration.Security.jwt.JwtUtil;
 import com.edev.luabridge.DTOs.ApiDTOs.ApiEntityDTO;
@@ -13,12 +13,16 @@ import com.edev.luabridge.DTOs.UserDTOs.RetornoLoginDTO.RetornoLoginDTO;
 import com.edev.luabridge.Entities.APIEntity.ApiEntity;
 import com.edev.luabridge.Entities.LuaScriptEntity.LuaScriptEntity;
 import com.edev.luabridge.Entities.UserEntity.UserEntity;
+import com.edev.luabridge.Models.Roles.Roles;
 import com.edev.luabridge.Models.RouteTypeModel.RouteType;
+import com.edev.luabridge.Modules.CriarLinks.CriarLinksServices;
+import com.edev.luabridge.Modules.CriarLinks.CriarLinksServicesImpl;
+import com.edev.luabridge.Modules.email.EnviarEmailServices;
 import com.edev.luabridge.Repositories.ApiRepository;
 import com.edev.luabridge.Repositories.LuaRepository;
 import com.edev.luabridge.Repositories.UserRepository;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,6 +40,10 @@ import java.util.UUID;
 @Service
 public class ApiServicesImpl implements ApiServices {
     @Autowired
+    private final EnviarEmailServices enviarEmailServices;
+    @Autowired
+    private final CriarLinksServices criarLinksServices;
+    @Autowired
     private final ApiRepository apiRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -45,7 +53,9 @@ public class ApiServicesImpl implements ApiServices {
     private  final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     final private JwtUtil jwtUtil;
-    public ApiServicesImpl(ApiRepository apiRepository, LuaRepository luaRepository, UserRepository userRepository, AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+    public ApiServicesImpl(EnviarEmailServices enviarEmailServices, CriarLinksServices criarLinksServices, ApiRepository apiRepository, LuaRepository luaRepository, UserRepository userRepository, AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+        this.enviarEmailServices = enviarEmailServices;
+        this.criarLinksServices = criarLinksServices;
         this.apiRepository = apiRepository;
         this.luaRepository = luaRepository;
         this.userRepository = userRepository;
@@ -165,7 +175,9 @@ public class ApiServicesImpl implements ApiServices {
             Optional<UserEntity> optionalUserEntity = userRepository.findByEmail(loginUserDTO.email());
             if (optionalUserEntity.isPresent()) {
                 UserEntity user = optionalUserEntity.get();
-
+                if (user.getRoles().equals(Roles.NOVERIFIED)){
+                    return ResponseEntity.badRequest().body("Usuário não verificado. Por favor, vá ao seu email e verifique sua conta.");
+                }
 
                 if (passwordEncoder.matches(loginUserDTO.password(), user.getPassword())) {
                     Authentication authentication = authenticationManager.authenticate(
@@ -217,8 +229,10 @@ public class ApiServicesImpl implements ApiServices {
             UserEntity nUser = UserEntity.builder()
                     .email(createUserDTO.email())
                     .password(encryptedPassword)
+                    .roles(Roles.NOVERIFIED)
+                    .emailVerified(false)
                     .build();
-
+            enviarEmailServices.enviarEmailVerificacaoConta(createUserDTO.email());
             return ResponseEntity.ok(userRepository.save(nUser));
 
         } catch (Exception e) {
@@ -260,6 +274,129 @@ public class ApiServicesImpl implements ApiServices {
                     .apis(listApi)
                     .build();
             return ResponseEntity.ok().body(nRetorno);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> verificarConta(UUID token, String email) {
+        try {
+            StringBuilder htmlContent = new StringBuilder();
+            if (criarLinksServices.ContasParaVerificar(email, token.toString())){
+
+
+                htmlContent.append("<!DOCTYPE html>\n");
+                htmlContent.append("<html lang=\"en\">\n");
+                htmlContent.append("<head>\n");
+                htmlContent.append("    <meta charset=\"UTF-8\">\n");
+                htmlContent.append("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n");
+                htmlContent.append("    <title>Verificar conta LuaCoffe!</title>\n");
+                htmlContent.append("    <style>\n");
+                htmlContent.append("        body {\n");
+                htmlContent.append("            height: 90vh;\n");
+                htmlContent.append("            font-family: Verdana, Geneva, Tahoma, sans-serif;\n");
+                htmlContent.append("            display: flex;\n");
+                htmlContent.append("            flex-direction: column;\n");
+                htmlContent.append("            align-items: center;\n");
+                htmlContent.append("            justify-content: center;\n");
+                htmlContent.append("            align-content: center;\n");
+                htmlContent.append("            text-align: center;\n");
+                htmlContent.append("        }\n");
+                htmlContent.append("        h1, strong {\n");
+                htmlContent.append("            color: blueviolet;\n");
+                htmlContent.append("        }\n");
+                htmlContent.append("        p {\n");
+                htmlContent.append("            width: 350px;\n");
+                htmlContent.append("        }\n");
+                htmlContent.append("        a {\n");
+                htmlContent.append("            text-decoration: none;\n");
+                htmlContent.append("            font-weight: 600;\n");
+                htmlContent.append("            font-size: 1.3rem;\n");
+                htmlContent.append("            color: blueviolet;\n");
+                htmlContent.append("        }\n");
+                htmlContent.append("        button {\n");
+                htmlContent.append("            padding: 5px;\n");
+                htmlContent.append("            border-radius: 10px;\n");
+                htmlContent.append("        }\n");
+                htmlContent.append("    </style>\n");
+                htmlContent.append("</head>\n");
+                htmlContent.append("<body>\n");
+                htmlContent.append("    <div>\n");
+                htmlContent.append("        <h1 class=\"title\">Conta Verificada!</h1>\n");
+                htmlContent.append("        <p><strong>Obrigado </strong>por criar uma conta para testar o <strong>LuaCoffe!</strong> <strong>Serei\n");
+                htmlContent.append("                eternamente\n");
+                htmlContent.append("                grato.</strong> <br />\n");
+                htmlContent.append("        </p>\n");
+                htmlContent.append("        <button>\n");
+                htmlContent.append("            <a href=\"http://localhost:5173\">Voltar Para Login!</a>\n");
+                htmlContent.append("        </button>\n");
+                htmlContent.append("    </div>\n");
+                htmlContent.append("</body>\n");
+                htmlContent.append("</html>");
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Content-Type", "text/html; charset=UTF-8");
+
+                return new ResponseEntity<>(htmlContent.toString(), headers, HttpStatus.OK);
+            }
+            htmlContent.append("<!DOCTYPE html>\n");
+            htmlContent.append("<html lang=\"en\">\n");
+            htmlContent.append("<head>\n");
+            htmlContent.append("    <meta charset=\"UTF-8\">\n");
+            htmlContent.append("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n");
+            htmlContent.append("    <title>Verificar conta LuaCoffe!</title>\n");
+            htmlContent.append("    <style>\n");
+            htmlContent.append("        body {\n");
+            htmlContent.append("            height: 90vh;\n");
+            htmlContent.append("            font-family: Verdana, Geneva, Tahoma, sans-serif;\n");
+            htmlContent.append("            display: flex;\n");
+            htmlContent.append("            flex-direction: column;\n");
+            htmlContent.append("            align-items: center;\n");
+            htmlContent.append("            justify-content: center;\n");
+            htmlContent.append("            align-content: center;\n");
+            htmlContent.append("            text-align: center;\n");
+            htmlContent.append("        }\n");
+            htmlContent.append("        h1, strong {\n");
+            htmlContent.append("            color: rgb(206, 75, 75);\n");
+            htmlContent.append("        }\n");
+            htmlContent.append("        p {\n");
+            htmlContent.append("            width: 350px;\n");
+            htmlContent.append("        }\n");
+            htmlContent.append("        a {\n");
+            htmlContent.append("            text-decoration: none;\n");
+            htmlContent.append("            font-weight: 600;\n");
+            htmlContent.append("            font-size: 1.3rem;\n");
+            htmlContent.append("            color: blueviolet;\n");
+            htmlContent.append("        }\n");
+            htmlContent.append("        button {\n");
+            htmlContent.append("            padding: 5px;\n");
+            htmlContent.append("            border-radius: 10px;\n");
+            htmlContent.append("        }\n");
+            htmlContent.append("    </style>\n");
+            htmlContent.append("</head>\n");
+            htmlContent.append("<body>\n");
+            htmlContent.append("    <div>\n");
+            htmlContent.append("        <h1 class=\"title\">Não encontramos o seu Token :(</h1>\n");
+            htmlContent.append("        <p>\n");
+            htmlContent.append("            <strong>Não se preocupe! </strong>\n");
+            htmlContent.append("            Talvez a sua conta já esteja ativa, tente um login no\n");
+            htmlContent.append("            <strong>LuaCoffe!</strong>\n");
+            htmlContent.append("            <br>\n");
+            htmlContent.append("            - Caso o problema persista,\n");
+            htmlContent.append("            <strong>entre em contato com o suporte!</strong> - <br />\n");
+            htmlContent.append("        </p>\n");
+            htmlContent.append("        <button>\n");
+            htmlContent.append("            <a href=\"http://localhost:5173\">Voltar Para Login!</a>\n");
+            htmlContent.append("        </button>\n");
+            htmlContent.append("    </div>\n");
+            htmlContent.append("</body>\n");
+            htmlContent.append("</html>");
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Type", "text/html; charset=UTF-8");
+
+            return new ResponseEntity<>(htmlContent.toString(), headers, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

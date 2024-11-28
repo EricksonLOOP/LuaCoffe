@@ -1,11 +1,9 @@
-package com.edev.luabridge.LuaLibs.LuaDB;
+package com.edev.luabridge.Modules.LuaLibs.LuaDB;
 
-import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.OneArgFunction;
 import org.luaj.vm2.lib.ThreeArgFunction;
-import org.luaj.vm2.lib.TwoArgFunction;
 import org.luaj.vm2.lib.ZeroArgFunction;
 
 import java.sql.ResultSet;

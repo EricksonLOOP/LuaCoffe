@@ -1,4 +1,4 @@
-package com.edev.luabridge.Services.LuaServices;
+package com.edev.luabridge.Modules.LuaServices;
 
 import com.edev.luabridge.DTOs.RequestDTO.RequestDTO;
 import com.edev.luabridge.DTOs.ScriptDTO.ScriptDTO;

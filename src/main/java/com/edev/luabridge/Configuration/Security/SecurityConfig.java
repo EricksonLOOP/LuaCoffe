@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .authorizeRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(
                                 "/api/actions/create/user",
+                                "/api/actions/auth/account/verify/{token}/{reciver}",
                                 "/hello",
                                 "/api/actions/login/user",
                                 "/luacoffe/**")

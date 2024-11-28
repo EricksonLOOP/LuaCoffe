@@ -1,4 +1,4 @@
-package com.edev.luabridge.Services.FunctionsServices;
+package com.edev.luabridge.Modules.FunctionsServices;
 
 import com.edev.luabridge.Entities.LuaScriptEntity.LuaScriptEntity;
 import com.edev.luabridge.Models.RouteTypeModel.RouteType;

@@ -1,17 +1,14 @@
 package com.edev.luabridge.Controllers.ApiController;
 
-import com.edev.luabridge.Configuration.Security.jwt.JwtUtil;
 import com.edev.luabridge.DTOs.ApiDTOs.CriarApiDTO;
 import com.edev.luabridge.DTOs.CriarRotaDTO.CriarRotaDTO;
 import com.edev.luabridge.DTOs.LoginDTO.LoginDTO;
 import com.edev.luabridge.DTOs.ScriptDTO.ScriptDTO;
 import com.edev.luabridge.DTOs.UserDTOs.CreateUserDTO.CreateUserDTO;
 import com.edev.luabridge.DTOs.UserDTOs.LoginUserDTO.LoginUserDTO;
-import com.edev.luabridge.Entities.APIEntity.ApiEntity;
-import com.edev.luabridge.Services.ApiServices.ApiServices;
-import com.edev.luabridge.Services.LuaServices.LuaServices;
+import com.edev.luabridge.Modules.API.ApiServices;
+import com.edev.luabridge.Modules.LuaServices.LuaServices;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -56,4 +53,9 @@ public class ApiController {
     public ResponseEntity<?> loginUser(@RequestBody LoginUserDTO loginUserDTO){
         return apiServices.loginUser(loginUserDTO);
     }
+    @GetMapping("/auth/account/verify/{token}/{reciver}")
+    public ResponseEntity<?> verificarConta(@PathVariable("token") UUID token, @PathVariable("reciver") String email){
+        return apiServices.verificarConta(token, email);
+    }
+
 }
