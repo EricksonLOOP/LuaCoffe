@@ -1,6 +1,7 @@
 package com.edev.luabridge.Entities.UserEntity;
 
 import com.edev.luabridge.Entities.APIEntity.ApiEntity;
+import com.edev.luabridge.Models.Roles.Roles;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +24,8 @@ public class UserEntity {
     private String email;
     private String password;
     private String cargo;
+    private Boolean emailVerified;
+    private Roles roles;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ApiEntity> apis;
 }

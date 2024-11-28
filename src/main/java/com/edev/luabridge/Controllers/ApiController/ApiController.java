@@ -53,5 +53,9 @@ public class ApiController {
     public ResponseEntity<?> loginUser(@RequestBody LoginUserDTO loginUserDTO){
         return apiServices.loginUser(loginUserDTO);
     }
+    @GetMapping("/auth/account/verify/{token}/{reciver}")
+    public ResponseEntity<?> verificarConta(@PathVariable("token") UUID token, @PathVariable("reciver") String email){
+        return apiServices.verificarConta(token, email);
+    }
 
 }

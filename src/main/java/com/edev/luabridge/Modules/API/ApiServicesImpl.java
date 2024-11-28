@@ -13,7 +13,11 @@ import com.edev.luabridge.DTOs.UserDTOs.RetornoLoginDTO.RetornoLoginDTO;
 import com.edev.luabridge.Entities.APIEntity.ApiEntity;
 import com.edev.luabridge.Entities.LuaScriptEntity.LuaScriptEntity;
 import com.edev.luabridge.Entities.UserEntity.UserEntity;
+import com.edev.luabridge.Models.Roles.Roles;
 import com.edev.luabridge.Models.RouteTypeModel.RouteType;
+import com.edev.luabridge.Modules.CriarLinks.CriarLinksServices;
+import com.edev.luabridge.Modules.CriarLinks.CriarLinksServicesImpl;
+import com.edev.luabridge.Modules.email.EnviarEmailServices;
 import com.edev.luabridge.Repositories.ApiRepository;
 import com.edev.luabridge.Repositories.LuaRepository;
 import com.edev.luabridge.Repositories.UserRepository;
@@ -35,6 +39,10 @@ import java.util.UUID;
 @Service
 public class ApiServicesImpl implements ApiServices {
     @Autowired
+    private final EnviarEmailServices enviarEmailServices;
+    @Autowired
+    private final CriarLinksServices criarLinksServices;
+    @Autowired
     private final ApiRepository apiRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -44,7 +52,9 @@ public class ApiServicesImpl implements ApiServices {
     private  final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     final private JwtUtil jwtUtil;
-    public ApiServicesImpl(ApiRepository apiRepository, LuaRepository luaRepository, UserRepository userRepository, AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+    public ApiServicesImpl(EnviarEmailServices enviarEmailServices, CriarLinksServices criarLinksServices, ApiRepository apiRepository, LuaRepository luaRepository, UserRepository userRepository, AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+        this.enviarEmailServices = enviarEmailServices;
+        this.criarLinksServices = criarLinksServices;
         this.apiRepository = apiRepository;
         this.luaRepository = luaRepository;
         this.userRepository = userRepository;
@@ -164,7 +174,9 @@ public class ApiServicesImpl implements ApiServices {
             Optional<UserEntity> optionalUserEntity = userRepository.findByEmail(loginUserDTO.email());
             if (optionalUserEntity.isPresent()) {
                 UserEntity user = optionalUserEntity.get();
-
+                if (user.getRoles().equals(Roles.NOVERIFIED)){
+                    return ResponseEntity.badRequest().body("Usuário não verificado. Por favor, vá ao seu email e verifique sua conta.");
+                }
 
                 if (passwordEncoder.matches(loginUserDTO.password(), user.getPassword())) {
                     Authentication authentication = authenticationManager.authenticate(
@@ -216,8 +228,10 @@ public class ApiServicesImpl implements ApiServices {
             UserEntity nUser = UserEntity.builder()
                     .email(createUserDTO.email())
                     .password(encryptedPassword)
+                    .roles(Roles.NOVERIFIED)
+                    .emailVerified(false)
                     .build();
-
+            enviarEmailServices.enviarEmailVerificacaoConta(createUserDTO.email());
             return ResponseEntity.ok(userRepository.save(nUser));
 
         } catch (Exception e) {
@@ -259,6 +273,18 @@ public class ApiServicesImpl implements ApiServices {
                     .apis(listApi)
                     .build();
             return ResponseEntity.ok().body(nRetorno);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> verificarConta(UUID token, String email) {
+        try {
+            if (criarLinksServices.ContasParaVerificar(email, token.toString())){
+                return ResponseEntity.ok("Conta verificada com sucesso! Pode voltar e efetuar o seu login no LuaCoffe!");
+            }
+            return ResponseEntity.badRequest().body("Infelizmente parace que sua conta ainda não foi registrada para podermos fazer a verificação. :(");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

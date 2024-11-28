@@ -14,8 +14,10 @@ public interface ApiServices {
     ResponseEntity<?> criarRota(CriarRotaDTO criarRotaDTO);
 
     ResponseEntity<?> getApi(LoginDTO loginDTO);
-ResponseEntity<?> loginUser(LoginUserDTO loginUserDTO);
+    ResponseEntity<?> loginUser(LoginUserDTO loginUserDTO);
     ResponseEntity<?> createUser(CreateUserDTO createUserDTO);
 
     ResponseEntity<?> deleteApi(UUID user, UUID apiId);
+
+    ResponseEntity<?> verificarConta(UUID token, String email);
 }
