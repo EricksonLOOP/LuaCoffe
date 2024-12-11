@@ -4,6 +4,7 @@ import com.edev.luabridge.DTOs.ApiDTOs.CriarApiDTO;
 import com.edev.luabridge.DTOs.CriarRotaDTO.CriarRotaDTO;
 import com.edev.luabridge.DTOs.LoginDTO.LoginDTO;
 import com.edev.luabridge.DTOs.ScriptDTO.ScriptDTO;
+import com.edev.luabridge.DTOs.UserDTOs.AtualizarUserDTO.AtualizaUserDTO;
 import com.edev.luabridge.DTOs.UserDTOs.CreateUserDTO.CreateUserDTO;
 import com.edev.luabridge.DTOs.UserDTOs.LoginUserDTO.LoginUserDTO;
 import com.edev.luabridge.Modules.API.ApiServices;
@@ -52,6 +53,10 @@ public class ApiController {
     @PostMapping("/login/user")
     public ResponseEntity<?> loginUser(@RequestBody LoginUserDTO loginUserDTO){
         return apiServices.loginUser(loginUserDTO);
+    }
+    @PutMapping("/user/{id}/update/profile")
+    public ResponseEntity<?> atualizarUsuario(@RequestBody AtualizaUserDTO atualizaUserDTO, @PathVariable("id") UUID id, String token){
+        return apiServices.atualizarUsuario(atualizaUserDTO, id, token);
     }
     @GetMapping("/auth/account/verify/{token}/{reciver}")
     public ResponseEntity<?> verificarConta(@PathVariable("token") UUID token, @PathVariable("reciver") String email){

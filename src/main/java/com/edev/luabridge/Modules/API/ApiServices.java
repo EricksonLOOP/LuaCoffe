@@ -3,6 +3,7 @@ package com.edev.luabridge.Modules.API;
 import com.edev.luabridge.DTOs.ApiDTOs.CriarApiDTO;
 import com.edev.luabridge.DTOs.CriarRotaDTO.CriarRotaDTO;
 import com.edev.luabridge.DTOs.LoginDTO.LoginDTO;
+import com.edev.luabridge.DTOs.UserDTOs.AtualizarUserDTO.AtualizaUserDTO;
 import com.edev.luabridge.DTOs.UserDTOs.CreateUserDTO.CreateUserDTO;
 import com.edev.luabridge.DTOs.UserDTOs.LoginUserDTO.LoginUserDTO;
 import org.springframework.http.ResponseEntity;
@@ -20,4 +21,5 @@ public interface ApiServices {
     ResponseEntity<?> deleteApi(UUID user, UUID apiId);
 
     ResponseEntity<?> verificarConta(UUID token, String email);
+    ResponseEntity<?> atualizarUsuario(AtualizaUserDTO atualizaUserDTO, UUID id, String token);
 }

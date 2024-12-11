@@ -1,23 +1,30 @@
 package com.edev.luabridge.Modules.email;
 
+import com.edev.luabridge.Entities.ServicesEntitys.EmailServiceEntity.EmailServiceEntity;
 import com.edev.luabridge.Modules.CriarLinks.CriarLinksServices;
+import com.edev.luabridge.Repositories.EmailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Properties;
 
 @Service
-public class EnviarEmailServicesImpl implements EnviarEmailServices{
+public class EmailServicesImpl implements EmailServices {
     @Autowired
     final private JavaMailSender mailSender;
     @Autowired
     final private CriarLinksServices criarLinksServices;
+    @Autowired
+    final private EmailRepository emailRepository;
 
-    public EnviarEmailServicesImpl(JavaMailSender mailSender, CriarLinksServices criarLinksServices) {
+    public EmailServicesImpl(JavaMailSender mailSender, CriarLinksServices criarLinksServices, EmailRepository emailRepository) {
         this.criarLinksServices = criarLinksServices;
+        this.emailRepository = emailRepository;
         this.mailSender = criarSender("ericksonagust@gmail.com", "uwlk tfup xehr etck");
     }
 
@@ -66,5 +73,22 @@ public class EnviarEmailServicesImpl implements EnviarEmailServices{
         }catch (Exception e){
             return false;
         }
+    }
+
+    @Override
+    public ResponseEntity<?> cadastrarEmailServices(String email) {
+    try{
+        Optional<EmailServiceEntity> optionalEmailServiceEntity = emailRepository.findByEmail(email);
+        if (optionalEmailServiceEntity.isPresent()){
+            return ResponseEntity.badRequest().body("Já registrado.");
+        }
+        EmailServiceEntity nEmail = EmailServiceEntity.builder()
+                .email(email)
+                .build();
+        emailRepository.save(nEmail);
+        return ResponseEntity.ok("Email registrado com sucesso.");
+    } catch (Exception e) {
+        return ResponseEntity.internalServerError().body("Erro interno ao salvar email no serviço.");
+    }
     }
 }

@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,9 +22,11 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private String name;
+    private byte[] profileImage;
     private String email;
     private String password;
     private String cargo;
+    private String bio;
     private Boolean emailVerified;
     private Roles roles;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

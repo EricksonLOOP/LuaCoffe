@@ -7,6 +7,7 @@ import com.edev.luabridge.DTOs.ApiDTOs.CriarApiDTO;
 import com.edev.luabridge.DTOs.CriarRotaDTO.CriarRotaDTO;
 import com.edev.luabridge.DTOs.LoginDTO.LoginDTO;
 import com.edev.luabridge.DTOs.LuaScriptDTO.LuaScriptDTO;
+import com.edev.luabridge.DTOs.UserDTOs.AtualizarUserDTO.AtualizaUserDTO;
 import com.edev.luabridge.DTOs.UserDTOs.CreateUserDTO.CreateUserDTO;
 import com.edev.luabridge.DTOs.UserDTOs.LoginUserDTO.LoginUserDTO;
 import com.edev.luabridge.DTOs.UserDTOs.RetornoLoginDTO.RetornoLoginDTO;
@@ -16,8 +17,7 @@ import com.edev.luabridge.Entities.UserEntity.UserEntity;
 import com.edev.luabridge.Models.Roles.Roles;
 import com.edev.luabridge.Models.RouteTypeModel.RouteType;
 import com.edev.luabridge.Modules.CriarLinks.CriarLinksServices;
-import com.edev.luabridge.Modules.CriarLinks.CriarLinksServicesImpl;
-import com.edev.luabridge.Modules.email.EnviarEmailServices;
+import com.edev.luabridge.Modules.email.EmailServices;
 import com.edev.luabridge.Repositories.ApiRepository;
 import com.edev.luabridge.Repositories.LuaRepository;
 import com.edev.luabridge.Repositories.UserRepository;
@@ -40,7 +40,7 @@ import java.util.UUID;
 @Service
 public class ApiServicesImpl implements ApiServices {
     @Autowired
-    private final EnviarEmailServices enviarEmailServices;
+    private final EmailServices emailServices;
     @Autowired
     private final CriarLinksServices criarLinksServices;
     @Autowired
@@ -53,8 +53,8 @@ public class ApiServicesImpl implements ApiServices {
     private  final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     final private JwtUtil jwtUtil;
-    public ApiServicesImpl(EnviarEmailServices enviarEmailServices, CriarLinksServices criarLinksServices, ApiRepository apiRepository, LuaRepository luaRepository, UserRepository userRepository, AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
-        this.enviarEmailServices = enviarEmailServices;
+    public ApiServicesImpl(EmailServices emailServices, CriarLinksServices criarLinksServices, ApiRepository apiRepository, LuaRepository luaRepository, UserRepository userRepository, AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+        this.emailServices = emailServices;
         this.criarLinksServices = criarLinksServices;
         this.apiRepository = apiRepository;
         this.luaRepository = luaRepository;
@@ -198,6 +198,8 @@ public class ApiServicesImpl implements ApiServices {
                     RetornoLoginDTO nRetorno = RetornoLoginDTO.builder()
                             .name(user.getName())
                             .id(user.getId())
+                            .bio(user.getBio())
+                            .cargo(user.getCargo())
                             .email(user.getEmail())
                             .apis(listApi)
                             .token(token)
@@ -232,7 +234,7 @@ public class ApiServicesImpl implements ApiServices {
                     .roles(Roles.NOVERIFIED)
                     .emailVerified(false)
                     .build();
-            enviarEmailServices.enviarEmailVerificacaoConta(createUserDTO.email());
+            emailServices.enviarEmailVerificacaoConta(createUserDTO.email());
             return ResponseEntity.ok(userRepository.save(nUser));
 
         } catch (Exception e) {
@@ -399,6 +401,40 @@ public class ApiServicesImpl implements ApiServices {
             return new ResponseEntity<>(htmlContent.toString(), headers, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> atualizarUsuario(AtualizaUserDTO atualizaUserDTO, UUID id, String token) {
+        try{
+            Optional<UserEntity> optionalUserEntity = userRepository.findById(id);
+            if (optionalUserEntity.isEmpty()){
+                return ResponseEntity.badRequest().body("Usuário não encontrado.");
+            }
+            UserEntity user = optionalUserEntity.get();
+            user.setBio(atualizaUserDTO.bio());
+            user.setName(atualizaUserDTO.name());
+            user.setCargo(atualizaUserDTO.cargo());
+            userRepository.save(user);
+            List<ApiRetornoDTO> listApi = new ArrayList<>();
+            user.getApis().forEach(api -> listApi.add(ApiRetornoDTO.builder()
+                    .id(api.getId())
+                    .name(api.getName())
+                    .token(api.getApiToken())
+                    .build()));
+
+            RetornoLoginDTO nRetorno = RetornoLoginDTO.builder()
+                    .name(user.getName())
+                    .id(user.getId())
+                    .bio(user.getBio())
+                    .cargo(user.getCargo())
+                    .email(user.getEmail())
+                    .apis(listApi)
+                    .token(token)
+                    .build();
+            return ResponseEntity.ok().body(nRetorno);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Erro ao atualizar usuário");
         }
     }
 
