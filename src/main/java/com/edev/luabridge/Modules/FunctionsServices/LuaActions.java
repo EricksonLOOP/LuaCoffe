@@ -1,37 +1,26 @@
 package com.edev.luabridge.Modules.FunctionsServices;
 
-import com.edev.luabridge.Entities.LuaScriptEntity.LuaScriptEntity;
-import com.edev.luabridge.Models.RouteTypeModel.RouteType;
-import com.edev.luabridge.Repositories.LuaRepository;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaValue;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.sql.DataSource;
-import java.sql.DriverManager;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 @Service
 public class LuaActions {
     private final Globals globals;
 
-    @Autowired
-    private final LuaRepository luaRepository;
 
-    public LuaActions(Globals globals, LuaRepository luaRepository) {
+    public LuaActions(Globals globals) {
         this.globals = globals;
-        this.luaRepository = luaRepository;
     }
 
     public String ReplaceWaitingValues(String script, List<Map<String, Object>> params){
        String scriptWithFunctionValuesReplaced = waitingValueOfScript(script, params);
-       String scriptWithParamsValuesReplaced = waitingValueOfParams(scriptWithFunctionValuesReplaced, params);
-       return scriptWithParamsValuesReplaced;
+        return waitingValueOfParams(scriptWithFunctionValuesReplaced, params);
     }
     public String waitingValueOfParams(String script, List<Map<String, Object>> params) {
         // Expressão regular para identificar "waiting.valueOfParam(paramName)" com suporte a strings com aspas
@@ -73,12 +62,6 @@ public class LuaActions {
         matcher.appendTail(sb);
         return sb.toString();
     }
-    public DataSource SetDb(List<LuaScriptEntity> scripts){
-       Optional<LuaScriptEntity> databseScripts = scripts.stream()
-               .filter(script -> script.getRoute().equals("dbConfig") && script.getMethod().equals(RouteType.DATABASE))
-               .findFirst();
-       return null;
-    }
 
 
 
@@ -108,17 +91,10 @@ public class LuaActions {
         return sb.toString();
     }
 
-    public String executeLuaCode(String name, List<Map<String, Object>> params){
+    public String executeLuaCode(String script, List<Map<String, Object>> params){
         try{
-
-            Optional<LuaScriptEntity> optionalLuaScriptEntity = luaRepository.findByRoute(name);
-            if (optionalLuaScriptEntity.isEmpty()){
-                return "Script não encontrado!";
-            }
-            String script = optionalLuaScriptEntity.get().getScript();
-            String scriptName = optionalLuaScriptEntity.get().getRoute();
             String complete = ReplaceWaitingValues(script, params);
-            LuaValue chunk = globals.load(complete, scriptName);
+            LuaValue chunk = globals.load(complete);
             LuaValue response = chunk.call();
             System.out.println(complete);
             return response.toString();
