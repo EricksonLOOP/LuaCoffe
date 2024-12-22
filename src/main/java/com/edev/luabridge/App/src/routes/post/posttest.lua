@@ -1,8 +1,8 @@
--- Importing a scrit from package path
-luaCoffe.mapping("posttest")
+-- Importing a script from package path
+luaCoffe.mapping("post/posttest")
 local script_test_import = import("script-example")
 
--- Creating the "classe" Script_test
+-- Creating the "class" Script_test
 local ScriptTestClass = script_test_import();
 
 --  Making an instance of Script_test
@@ -25,7 +25,7 @@ local user = {
 }
  obj = nil
 if user.password == nil and user.name == nil then
-     obj = { code = 400, response = "You should send the params, broh!" }
+     obj = { code = 400, response = "You should send the params, broh!"}
     return obj;
 end
 obj = { code = 200, response = stringRes }
