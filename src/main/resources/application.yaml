@@ -1,14 +1,7 @@
 spring:
   application:
     name: LuaBridge
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ericksonagust45@gmail.com
-    password: uwlk tfup xehr etck
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
+file:
+  path: /src/main/java/com/edev/luabridge/App/src/routes/
+  package:
+    path: /src/main/java/com/edev/luabridge/App/src/scripts

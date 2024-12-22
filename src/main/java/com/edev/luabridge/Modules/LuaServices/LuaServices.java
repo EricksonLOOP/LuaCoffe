@@ -1,6 +1,7 @@
 package com.edev.luabridge.Modules.LuaServices;
 
-import org.springframework.http.ResponseEntity;
+import com.edev.luabridge.Models.LuaCoffeLuaReturnModel.LuaReturn;
+
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,6 @@ import java.util.Map;
 
 public interface LuaServices {
     //Retornos Públicos
-    ResponseEntity<?> runScript(String script, List<Map<String, Object>> params);
+    LuaReturn runScript(String script, List<Map<String, Object>> params, String path);
 
 }
