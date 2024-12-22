@@ -15,16 +15,16 @@ public class FileServicesImpl implements FileServices, FilenameFilter {
     private String filepath;
     @Value("${file.package.path}")
     private String filepathImported;
+
+
     @Override
     public File encontrarArquivos(String name, String method) {
         String currentDirectory = Paths.get("").toAbsolutePath().toString();
         File directory = new File(currentDirectory + filepath + method);
         if (directory.exists() && directory.isDirectory()) {
-
             File[] files = directory.listFiles();
             if (files != null) {
                 for (File file : files) {
-
                     if (file.getName().equals(name+".lua")) {
                         return file;
                     }
@@ -34,6 +34,8 @@ public class FileServicesImpl implements FileServices, FilenameFilter {
 
         return null;
     }
+
+
     @Override
     public File encontrarArquivosImportados(String name) {
         String currentDirectory = Paths.get("").toAbsolutePath().toString();
@@ -56,12 +58,7 @@ public class FileServicesImpl implements FileServices, FilenameFilter {
 
     @Override
     public String readFile(File arquivo) throws IOException {
-        // Para Java 11+
         return Files.readString(arquivo.toPath());
-
-        // Se estiver usando uma versão anterior ao Java 11:
-        // List<String> linhas = Files.readAllLines(arquivo.toPath());
-        // return String.join("\n", linhas);
     }
 
     @Override

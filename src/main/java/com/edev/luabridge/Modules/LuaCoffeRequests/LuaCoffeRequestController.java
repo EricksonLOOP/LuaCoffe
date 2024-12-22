@@ -21,6 +21,8 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api")
+// This RestController is responsible to receive all requests and process
+// With the lua scripts in the Framework
 public class LuaCoffeRequestController {
     @Autowired
     private final LuaServices luaServices;
@@ -59,7 +61,9 @@ public class LuaCoffeRequestController {
     public ResponseEntity<?> LuaCoffePost(
             HttpServletRequest request,
             @RequestBody Map<String, List<Map<String, Object>>> body) throws IOException {
+
         try{
+
             String endpoint = request.getRequestURI().substring(request.getContextPath().length() + "/get/".length());
             String luascript = endpoint.substring(endpoint.lastIndexOf('/') + 1);
             List<Map<String, Object>> params = body.get("params");
@@ -71,16 +75,12 @@ public class LuaCoffeRequestController {
             }
 
             File scriptFile = file.get();
-
-
             String readFile = fileServices.readFile(scriptFile);
+
             if (readFile.isEmpty()) {
                 return ResponseEntity.badRequest().body("Script está vazio");
             }
-
             LuaReturn luaReturn = luaServices.runScript(readFile, params, endpoint);
-
-
             return ResponseEntity
                     .status(HttpStatusCode.valueOf(luaReturn.getReturnCode()))
                     .body(getReturnValue(luaReturn));
@@ -97,24 +97,20 @@ public class LuaCoffeRequestController {
 
 
 
-
+    // Return value from LuaValue to JavaValues
     public Object getReturnValue(LuaReturn luaReturn) {
         LuaValue returnObj = luaReturn.getReturnObj();
 
         if (returnObj.isstring()) {
-
             return returnObj.tojstring();
         } else if (returnObj.isnumber()) {
-
             return returnObj.toint();
         } else if (returnObj.istable()) {
             LuaTable luaTable = returnObj.checktable();
             return luaTableToMap(luaTable);
         } else if (returnObj.isboolean()) {
-
             return returnObj.toboolean();
         } else if (returnObj.isnil()) {
-
             return null;
         } else {
             return returnObj.tojstring();

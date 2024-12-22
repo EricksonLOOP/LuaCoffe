@@ -24,16 +24,12 @@ public class LuaActions {
     }
 
     public String ReplaceWaitingValues(String script, List<Map<String, Object>> params, String path) throws IOException {
-        // Verifying if path was configured
         String verification = verifyingPath(script, path);
         if ( verification != null){
+
             String scriptWithImportedScripts = importScripting(verification);
-            // Primeiro, substitui os parâmetros de waiting.valueOfParam
             String scriptWithFunctionValuesReplaced = waitingValueOfParams(scriptWithImportedScripts, params);
 
-
-
-            // E finalmente substitui os waitingValueOfScript
             return waitingValueOfScript(scriptWithFunctionValuesReplaced, params, path);
 
         }
@@ -47,13 +43,13 @@ public class LuaActions {
         if (matcher.find()) {
             String mappingName = matcher.group(1).replace("\"", "");
             if (!mappingName.equals(path)) {
-                return null; // Se o path não for o esperado, retorna falso sem fazer mudanças
+                return null;
             }
-            matcher.appendReplacement(sb, ""); // Remove o trecho encontrado
+            matcher.appendReplacement(sb, "");
         }
 
-        matcher.appendTail(sb); // Adiciona o restante do script
-        script = sb.toString(); // Atualiza o script com a remoção
+        matcher.appendTail(sb);
+        script = sb.toString();
         return script;
     }
 
