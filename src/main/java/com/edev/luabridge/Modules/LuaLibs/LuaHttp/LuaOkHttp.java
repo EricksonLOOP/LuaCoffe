@@ -4,6 +4,7 @@ import com.squareup.okhttp.*;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.OneArgFunction;
+import org.luaj.vm2.lib.ThreeArgFunction;
 import org.luaj.vm2.lib.TwoArgFunction;
 import org.luaj.vm2.lib.ZeroArgFunction;
 
@@ -21,12 +22,13 @@ public class LuaOkHttp extends ZeroArgFunction {
         return httpClient;
     }
 
-    static class HttpGet extends OneArgFunction {
+    static class HttpGet extends TwoArgFunction {
         @Override
-        public LuaValue call(LuaValue url) {
+        public LuaValue call(LuaValue url, LuaValue table) {
             if (url.isstring()) {
                 Request request = new Request.Builder()
                         .url(url.checkjstring())
+                        .addHeader("Authorization", table.checkjstring())
                         .build();
 
                 try {
@@ -44,13 +46,14 @@ public class LuaOkHttp extends ZeroArgFunction {
     }
 
     // Classe para requisições POST
-    static class HttpPost extends TwoArgFunction {
+    static class HttpPost extends ThreeArgFunction {
         @Override
-        public LuaValue call(LuaValue url, LuaValue jsonData) {
+        public LuaValue call(LuaValue url, LuaValue jsonData, LuaValue table) {
             if (url.isstring() && jsonData.isstring()) {
                 RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonData.checkjstring());
                 Request request = new Request.Builder()
                         .url(url.checkjstring())
+                        .addHeader("Authorization", table.checkjstring())
                         .post(body)
                         .build();
 

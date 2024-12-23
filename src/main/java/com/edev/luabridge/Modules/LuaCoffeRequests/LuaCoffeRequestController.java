@@ -51,7 +51,7 @@ public class LuaCoffeRequestController {
             return ResponseEntity.badRequest().body("Script está vazio");
         }
 
-        LuaReturn luaReturn = luaServices.runScript(readFile, Collections.emptyList(), endpoint);
+        LuaReturn luaReturn = luaServices.runScript(readFile, Collections.emptyMap(), endpoint);
         return ResponseEntity
                 .status(HttpStatusCode.valueOf(luaReturn.getReturnCode()))
                 .body(getReturnValue(luaReturn));
@@ -60,13 +60,13 @@ public class LuaCoffeRequestController {
     @PostMapping("/post/**")
     public ResponseEntity<?> LuaCoffePost(
             HttpServletRequest request,
-            @RequestBody Map<String, List<Map<String, Object>>> body) throws IOException {
+            @RequestBody Map<String, Object> params) throws IOException {
 
         try{
 
             String endpoint = request.getRequestURI().substring(request.getContextPath().length() + "/get/".length());
             String luascript = endpoint.substring(endpoint.lastIndexOf('/') + 1);
-            List<Map<String, Object>> params = body.get("params");
+
             String[] paths = endpoint.split("/");
             Optional<File> file = Optional.ofNullable(fileServices.encontrarArquivos(luascript, "post"));
 

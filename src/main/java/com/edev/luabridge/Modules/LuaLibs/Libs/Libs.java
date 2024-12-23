@@ -11,9 +11,9 @@ public class Libs extends ZeroArgFunction {
     @Override
     public LuaValue call() {
         LuaTable libs = new LuaTable();
-        libs.set("DataBase", new LuaDB().call());
-        libs.set("LuaJson", new LuaJSON().call());
-        libs.set("LuaOkHttp", new LuaOkHttp().call());
+        libs.set("dataBase", new LuaDB().call());
+        libs.set("luaJson", new LuaJSON().call());
+        libs.set("luaOkHttp", new LuaOkHttp().call());
         return libs;
     }
 }

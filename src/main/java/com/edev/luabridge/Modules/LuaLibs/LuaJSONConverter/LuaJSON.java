@@ -13,7 +13,7 @@ public class LuaJSON extends ZeroArgFunction {
     public LuaValue call() {
         LuaTable LuaJSON = new LuaTable();
         LuaJSON.set("luaToJson", new LuaToJSON());
-
+        LuaJSON.set("jsonToLua", new JsonToLua());
         return LuaJSON;
     }
 
@@ -21,7 +21,7 @@ public class LuaJSON extends ZeroArgFunction {
 
         @Override
         public LuaValue call(LuaValue luaValue) {
-            if (luaValue.istable()) {
+            if (luaValue.checktable().istable()) {
                 LuaTable table = luaValue.checktable();
                 JSONObject tableJson = luaJSONClasse.luaTableToJson(table);
 

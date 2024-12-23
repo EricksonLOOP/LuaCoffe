@@ -1,3 +1,4 @@
+luaCoffe.mapping("get/get-example")
 -- Importing a scrit from package path
 local script_test_import = import("script-example")
 

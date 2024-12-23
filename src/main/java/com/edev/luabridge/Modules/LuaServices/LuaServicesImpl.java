@@ -29,12 +29,12 @@ public class LuaServicesImpl implements LuaServices{
     }
 
     @Override
-    public LuaReturn runScript(String script, List<Map<String, Object>> params, String path) {
+    public LuaReturn runScript(String script, Map<String, Object> params, String path) {
         try {
             String complete = luaActions.ReplaceWaitingValues(script, params, path);
             LuaTable luacoffe = new LuaTable();
             luacoffe.set("libs", new Libs().call());
-            globals.set("luacoffe", luacoffe);
+            globals.set("luaCoffe", luacoffe);
             String currentDirectory = Paths.get("").toAbsolutePath().toString();
 
             globals.set("package.path", currentDirectory +importsPath);

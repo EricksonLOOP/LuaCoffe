@@ -9,6 +9,6 @@ import java.util.Map;
 
 public interface LuaServices {
     //Retornos Públicos
-    LuaReturn runScript(String script, List<Map<String, Object>> params, String path);
+    LuaReturn runScript(String script, Map<String, Object> params, String path);
 
 }
