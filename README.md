@@ -35,10 +35,26 @@ Assim que clonar o repositório do LuaCoffe, você já pode ir para o desenvolvi
 </p>
 <h3>Modificando os Path</h3>
 <p>
-Para modificar os Paths de desenvolvimento no L.C, accesse o arquivo de configuração do LuaCoffe na sequência: <code>src/main/resources/application.yaml</code>. Esse arquivo é responsável pela configuração da aplicação SpringBoot saiba maisa em: <a href="https://www.baeldung.com/spring-boot-yaml-vs-properties">Using application.yml vs application.properties in Spring Boot</a>
+Para modificar os Paths de desenvolvimento no L.C, accesse o arquivo de configuração do LuaCoffe na sequência: <code>src/main/resources/application.yaml</code>. Esse arquivo é responsável pela configuração da aplicação SpringBoot saiba maisa em: <a href="https://www.baeldung.com/spring-boot-yaml-vs-properties">Using application.yml vs application.properties in Spring Boot</a>.
 Ao acessar a pasta você terá algo parecido com:
+</br>
 <img src="./assets/application_yaml_example.png" alt=""/>
+</br>
+<p>
+Para conseguir mudar as pastas de desenvolvimento você só precisa modificar a o path em 
+<code>
+file: 
+    path: {path de desenvolvimento}
+</code>
+Dentro de file também temos o atributo 
+<code>
+package:
+    path: {path de scripts para serem importados}
+</code>
+ onde também é possivel modificar o path de scripts que serão usados como suporte para seus endpoits.
 </p>
+</p>
+</br>
 <h2>Criação de Endpoints</h2>
 <p>
 A criação de endpoints no LuaCoffe é extremamente simplificada, tudo o que você precisa e adicionar a tag de mapeamento em cima do seu script. Contudo, vale lembrar que seu script tem que estar dentro do path
