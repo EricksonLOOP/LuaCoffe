@@ -52,10 +52,29 @@ package:
     path: {path de scripts para serem importados}
 </code>
  onde também é possivel modificar o path de scripts que serão usados como suporte para seus endpoits.
+ Esses atributos são responsáveis por dizer onde sem sua pasta <code>.../App/..</code> haverá a varredura pelo endpoint em questão.
 </p>
 </p>
 </br>
 <h2>Criação de Endpoints</h2>
 <p>
-A criação de endpoints no LuaCoffe é extremamente simplificada, tudo o que você precisa e adicionar a tag de mapeamento em cima do seu script. Contudo, vale lembrar que seu script tem que estar dentro do path
+A criação de endpoints no LuaCoffe é extremamente simplificada, tudo o que você precisa e adicionar é a tag de mapeamento em cima do seu script. Contudo, vale lembrar que seu script tem que estar dentro do path especificado dentro do seu application.yaml
+</br>
+<code>
+file: 
+    path: {path de desenvolvimento}
+    package:
+        path: {path de scripts para serem importados}
+</code>
+</br>
+E então você pode adicionar a tag <code>luaCoffe.mapping("**método**/qualquer/rota/**nomeDoSeuArquivo**")</code>
+</br>
+Ex: <b>HelloWorld.lua</br>
+<code>
+    luaCoffe.mapping(get/minha/rota/HelloWord)
+    return {code = 200, response = "Hello, World!"}
+</code>
+</br>
+Vale lembrar que sem a tag especificando a rotade chamada do seu arquivo, ele estará fechado para chamadas, sendo impossibilitado usar ele como Endpoint.
+
 </p>
