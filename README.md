@@ -75,6 +75,61 @@ Ex: <b>HelloWorld.lua</br>
     return {code = 200, response = "Hello, World!"}
 </code>
 </br>
-Vale lembrar que sem a tag especificando a rotade chamada do seu arquivo, ele estará fechado para chamadas, sendo impossibilitado usar ele como Endpoint.
-
+Vale lembrar que sem a tag especificando a rota de chamada do seu arquivo, ele estará fechado para chamadas, sendo impossibilitado usar ele como Endpoint.
 </p>
+<h2>Trabalhando com vários scripts <code>import()</code></h2>
+<p>Ao desenvolver aplicações web, nos deparamos com a necessidade de reutilizar código com frequência. O <code>import()</code> no LuaCoffe facilita essa tarefa ao permitir que múltiplos scripts Lua sejam utilizados em conjunto, promovendo a modularidade e reutilização de funções e lógicas em diferentes partes da aplicação.</p>
+
+<p>Com o LuaCoffe, você pode importar qualquer script que esteja dentro do path configurado no <code>application.yaml</code>. Isso possibilita que um script possa acessar funções e variáveis de outro, mantendo o código organizado e modularizado. Ao invés de repetir trechos de código, você simplesmente os importa nos locais necessários.</p>
+
+<h3>Exemplo de Importação de Scripts</h3>
+<p>Suponha que você tenha um script <b>mathUtils.lua</b> com funções matemáticas que deseja reutilizar em várias partes da aplicação:</p>
+
+<pre><code>-- mathUtils.lua
+MathUtils = {}
+MathUtils.__index = Mathtils
+function MathUtils:soma(a, b)
+    return a + b
+end
+
+function MathUtils:multiplicar(a, b)
+    return a * b
+end
+return MathUtils
+</code></pre>
+
+<p>Agora, em outro script Lua, você pode importar <code>mathUtils.lua</code> e utilizar suas funções:</p>
+
+<pre><code>-- main.lua
+local mathUtils_import = import("mathUtils")
+local mathUtils_Class = mathUtils_import();
+local mathUtils_Instance = setmetatable({}, mathUtils_Class)
+
+local resultadoSoma = mathUtils:soma(10, 20)
+local resultadoMultiplicacao = mathUtils:multiplicar(5, 4)
+
+return {
+    code = 200,
+    response = "Resultado: " .. resultadoSoma .. " e " .. resultadoMultiplicacao
+}
+</code></pre>
+
+<p>Com isso, você consegue facilmente dividir a lógica da aplicação em diferentes arquivos e reutilizar essas funções em diversos endpoints, mantendo o código mais limpo e modular.</p>
+
+<h2>Facilitando a Integração de Bibliotecas Externas</h2>
+<p>O LuaCoffe também permite a integração de bibliotecas externas tanto em Lua quanto em Java. Para o lado Lua, basta que as bibliotecas estejam no diretório correto, conforme especificado no <code>application.yaml</code>, e você poderá importá-las diretamente nos seus scripts. Para bibliotecas Java, o framework fornece um mecanismo de acesso facilitado através da função <code>luaCoffe.libs</code>, permitindo que as funcionalidades Java sejam expostas e utilizadas diretamente nos scripts Lua.</p>
+
+<h3>Exemplo de Integração com Bibliotecas Java</h3>
+<p>Suponha que você queira utilizar a biblioteca <code>OkHttp</code> para realizar requisições HTTP a partir de um script Lua. No lado Java, a biblioteca já deve estar configurada no classpath, e então você pode utilizá-la da seguinte forma no LuaCoffe:</p>
+
+<pre><code>-- httpClient.lua
+
+function fazerRequisicao(url)
+    local req = luaCoffe.lib.luaOkHttp.get(url)
+    local response = req
+    -- Retorna uma tabela lua com os valores do Json
+    return luaCoffe.libs.luaJson.jsonToLua(req)
+end
+</code></pre>
+
+<p>Esse exemplo demonstra como é possível usar a força das bibliotecas Java diretamente nos scripts Lua, aumentando o potencial do desenvolvimento e mantendo a simplicidade de Lua no nível da lógica de aplicação.</p>
