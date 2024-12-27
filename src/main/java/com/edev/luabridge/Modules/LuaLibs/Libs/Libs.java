@@ -6,7 +6,8 @@ import com.edev.luabridge.Modules.LuaLibs.LuaJSONConverter.LuaJSON;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.ZeroArgFunction;
-
+// Aqui fica armazenado as bibliotecas dentro do luaCoffe.libs
+// Caso criar uma lib nova, crie um módlo novo, desenvolva ele, e adicione ele no luaCoffe.libs
 public class Libs extends ZeroArgFunction {
     @Override
     public LuaValue call() {

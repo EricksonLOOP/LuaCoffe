@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+//Aqui é onde ocorre as importações, e replacement de valores dos imports
 @Service
 public class LuaActions {
     private final Globals globals;
@@ -25,10 +25,12 @@ public class LuaActions {
     }
 
     public String ReplaceWaitingValues(String script, Map<String, Object> params, String path) throws IOException {
+        // Verificação para ver se o endpoint está aberto para requisição
         String verification = verifyingPath(script, path);
         if ( verification != null){
-
+            // Se estiver aberto verificamos se há importações de outros scripts
             String scriptWithImportedScripts = importScripting(verification);
+            // Também fazemos a verificação se há a necessidade de valores de parâmetros
             return waitingValueOfParams(scriptWithImportedScripts, params);
 
         }
