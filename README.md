@@ -138,3 +138,5 @@ end
 </code></pre>
 
 <p>This example shows how it is possible to use the power of Java libraries directly in Lua scripts, enhancing development potential while maintaining Lua's simplicity in the application logic layer.</p>
+
+<h1>LuaJ API</h1>
