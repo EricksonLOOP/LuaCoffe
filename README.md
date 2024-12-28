@@ -139,4 +139,12 @@ end
 
 <p>This example shows how it is possible to use the power of Java libraries directly in Lua scripts, enhancing development potential while maintaining Lua's simplicity in the application logic layer.</p>
 
-<h1>LuaJ API</h1>
+<h1>LuaJ API Integration</h1>
+<p>The LuaCoffe framework is built upon the powerful <strong>LuaJ API</strong>. To explore the full capabilities of LuaJ and understand how it enhances LuaCoffe, check out the official documentation <a href="https://github.com/luaj/luaj?tab=readme-ov-file#1---introduction" target="_blank">here</a>.</p>
+
+
+<h2>How to Contribute?</h2>
+<p>There are several ways you can contribute to the development of LuaCoffe. Whether you're experienced with Lua, Java, or simply passionate about helping, your contributions are highly valued. You can help by improving the documentation, writing guides, or providing tutorials that make it easier for new users to get started with the framework. Every bit of effort helps make LuaCoffe more accessible and user-friendly.</p>
+
+<p>If you're more technically inclined, consider contributing by developing new features, fixing bugs, or optimizing the framework's performance. Feel free to explore the codebase, suggest improvements, and submit pull requests. Collaboration is key, and together we can build a more robust and versatile tool for the entire developer community.</p>
+
