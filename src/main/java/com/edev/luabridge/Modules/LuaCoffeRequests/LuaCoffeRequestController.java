@@ -65,11 +65,73 @@ public class LuaCoffeRequestController {
 
         try{
 
-            String endpoint = request.getRequestURI().substring(request.getContextPath().length() + "/get/".length());
+            String endpoint = request.getRequestURI().substring(request.getContextPath().length() + "/post/".length());
             String luascript = endpoint.substring(endpoint.lastIndexOf('/') + 1);
 
             String[] paths = endpoint.split("/");
             Optional<File> file = Optional.ofNullable(fileServices.encontrarArquivos(luascript, "post"));
+
+            if (file.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endpoint not found");
+            }
+
+            File scriptFile = file.get();
+            String readFile = fileServices.readFile(scriptFile);
+
+            if (readFile.isEmpty()) {
+                return ResponseEntity.badRequest().body("Script está vazio");
+            }
+            LuaReturn luaReturn = luaServices.runScript(readFile, params, endpoint);
+            return ResponseEntity
+                    .status(HttpStatusCode.valueOf(luaReturn.getReturnCode()))
+                    .body(getReturnValue(luaReturn));
+        }catch (NullPointerException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endpoint not found.");
+        }
+    }
+    @PutMapping("/put/**")
+    public ResponseEntity<?> LuaCoffePut(
+            HttpServletRequest request,
+            @RequestBody Map<String, Object> params) throws IOException {
+
+        try{
+
+            String endpoint = request.getRequestURI().substring(request.getContextPath().length() + "/put/".length());
+            String luascript = endpoint.substring(endpoint.lastIndexOf('/') + 1);
+
+            String[] paths = endpoint.split("/");
+            Optional<File> file = Optional.ofNullable(fileServices.encontrarArquivos(luascript, "put"));
+
+            if (file.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endpoint not found");
+            }
+
+            File scriptFile = file.get();
+            String readFile = fileServices.readFile(scriptFile);
+
+            if (readFile.isEmpty()) {
+                return ResponseEntity.badRequest().body("Script está vazio");
+            }
+            LuaReturn luaReturn = luaServices.runScript(readFile, params, endpoint);
+            return ResponseEntity
+                    .status(HttpStatusCode.valueOf(luaReturn.getReturnCode()))
+                    .body(getReturnValue(luaReturn));
+        }catch (NullPointerException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endpoint not found.");
+        }
+    }
+    @DeleteMapping("/delete/**")
+    public ResponseEntity<?> LuaCoffeDelete(
+            HttpServletRequest request,
+            @RequestBody Map<String, Object> params) throws IOException {
+
+        try{
+
+            String endpoint = request.getRequestURI().substring(request.getContextPath().length() + "/delete/".length());
+            String luascript = endpoint.substring(endpoint.lastIndexOf('/') + 1);
+
+            String[] paths = endpoint.split("/");
+            Optional<File> file = Optional.ofNullable(fileServices.encontrarArquivos(luascript, "delete"));
 
             if (file.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endpoint not found");
