@@ -138,7 +138,25 @@ end
 </code></pre>
 
 <p>This example shows how it is possible to use the power of Java libraries directly in Lua scripts, enhancing development potential while maintaining Lua's simplicity in the application logic layer.</p>
+</br>
 
+<h2>Working with body request</h2>
+<p>When working with web development, we often come across the need to work with JSON for communication between machines. In LuaCoffe, it's no different. To wait for the value of an HTTP request in LuaCoffe, we use the <code>waiting.valueOfParam("**parameterName**")</code>. This method works both for sending data through a POST request and for sending parameters through a GET request.</p>
+
+<p>This approach makes it simple and straightforward to extract parameter values sent in the request body (POST) or as part of the URL (GET), allowing real-time data handling and performing actions such as authentication, resource creation, or any other business logic.</p>
+
+<pre><code>
+    -- Example.lua
+    luaCoffe.mapping("get/my/endpoint/example")
+    local myUser = {
+        name = waiting.valueOfParam("name"),
+        password = waiting.valueOfParam("password")
+    }
+    return {code = 200, response = myUser}
+</code></pre>
+
+<p>In the example above, we create an endpoint that extracts the <code>name</code> and <code>password</code> parameters from the HTTP request. These values are captured using <code>waiting.valueOfParam()</code> and returned in a JSON response with an HTTP 200 status code.</p>
+</br>
 <h1>LuaJ API Integration</h1>
 <p>The LuaCoffe framework is built upon the powerful <strong>LuaJ API</strong>. To explore the full capabilities of LuaJ and understand how it enhances LuaCoffe, check out the official documentation <a href="https://github.com/luaj/luaj?tab=readme-ov-file#1---introduction" target="_blank">here</a>.</p>
 
