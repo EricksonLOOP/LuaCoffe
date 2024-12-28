@@ -147,7 +147,7 @@ end
 
 <pre><code>
     -- Example.lua
-    luaCoffe.mapping("get/my/endpoint/example")
+    luaCoffe.mapping("post/my/endpoint/Example")
     local myUser = {
         name = waiting.valueOfParam("name"),
         password = waiting.valueOfParam("password")
@@ -157,6 +157,32 @@ end
 
 <p>In the example above, we create an endpoint that extracts the <code>name</code> and <code>password</code> parameters from the HTTP request. These values are captured using <code>waiting.valueOfParam()</code> and returned in a JSON response with an HTTP 200 status code.</p>
 </br>
+<h2>Usando classes Java no LuaCoffe</h2>
+<p>
+    Como o LuaCoffe foi criado em cima da API LuaJ, isso significa que temos todo o poder do LuaJ em nossas mãos. O LuaJ nos disponibiliza diversas bibliotecas para trabalhar com java, para saber mais sobre eles, <a href="https://github.com/luaj/luaj?tab=readme-ov-file#4---libraries">acesse aqui</a>.
+</p>
+<p>
+    From Luaj - " The Luajava Library
+The JsePlatform.standardGlobals() includes the luajava library, which simplifies binding to Java classes and methods. It is patterned after the original luajava project.
+The following lua script will open a swing frame on Java SE:
+
+<pre><code>
+    	jframe = luajava.bindClass( "javax.swing.JFrame" )
+	frame = luajava.newInstance( "javax.swing.JFrame", "Texts" );
+	frame:setDefaultCloseOperation(jframe.EXIT_ON_CLOSE)
+	frame:setSize(300,400)
+	frame:setVisible(true)
+</code></pre>
+See a longer sample in examples/lua/swingapp.lua for details, including a simple animation loop, rendering graphics, mouse and key handling, and image loading. Or try running it using:
+    <pre>
+    <code>
+    java -cp luaj-jse-3.0.2.jar lua examples/lua/swingapp.lua
+    </code>
+    </pre>
+The Java ME platform does not include this library, and it cannot be made to work because of the lack of a reflection API in Java ME.
+
+The lua connand line tool includes luajava."
+</p>
 <h1>LuaJ API Integration</h1>
 <p>The LuaCoffe framework is built upon the powerful <strong>LuaJ API</strong>. To explore the full capabilities of LuaJ and understand how it enhances LuaCoffe, check out the official documentation <a href="https://github.com/luaj/luaj?tab=readme-ov-file#1---introduction" target="_blank">here</a>.</p>
 
