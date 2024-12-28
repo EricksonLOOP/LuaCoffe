@@ -9,16 +9,27 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.edev.luabridge</groupId>
-	<artifactId>LuaBridgte</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>LuaBridgte</name>
-	<description>Uma conexão entre a Lua e o Café</description>
+	<artifactId>LuaBridge</artifactId>
+	<version>v1.0-ALPHA</version>
+	<name>LuaBridge</name>
+	<description>
+		A bridge between Lua and Java. Create your Lua APIs with LuaCoffe is easier.
+	</description>
 	<url/>
 	<licenses>
 		<license/>
 	</licenses>
 	<developers>
-		<developer/>
+		<developer>
+			<name>Erickson Dias</name>
+			<id>EricksonLOOP</id>
+			<url>https://github.com/EricksonLOOP</url>
+			<organization>OppoSys</organization>
+			<email>ericksonagust45@gmail.com</email>
+			<roles>
+				<role>Backend</role>
+			</roles>
+		</developer>
 	</developers>
 	<scm>
 		<connection/>
@@ -82,7 +93,6 @@
 			<artifactId>json</artifactId>
 			<version>20240303</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
