@@ -1,10 +1,9 @@
-package com.edev.luabridge.Modules.LuaCoffeRequests;
+package com.edev.luabridge.Modules.api;
 
 import com.edev.luabridge.Models.LuaCoffeLuaReturnModel.LuaReturn;
 import com.edev.luabridge.Modules.File.FileServices;
 import com.edev.luabridge.Modules.LuaServices.LuaServices;
 import jakarta.servlet.http.HttpServletRequest;
-import org.json.JSONObject;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.Varargs;
@@ -36,6 +35,29 @@ public class LuaCoffeRequestController {
 
     @GetMapping("/get/**")
     public ResponseEntity<?> LuaCoffeGet(
+            HttpServletRequest request
+    ) throws IOException, URISyntaxException {
+
+        String endpoint = request.getRequestURI().substring(request.getContextPath().length() + "/get/".length());
+        String luascript = endpoint.substring(endpoint.lastIndexOf('/') + 1);
+        Optional<File> fileOpt = Optional.ofNullable(fileServices.encontrarArquivos(luascript, "get"));
+        if (fileOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Script não encontrado");
+        }
+
+        File scriptFile = fileOpt.get();
+        String readFile = fileServices.readFile(scriptFile);
+        if (readFile.isEmpty()) {
+            return ResponseEntity.badRequest().body("Script está vazio");
+        }
+
+        LuaReturn luaReturn = luaServices.runScript(readFile, Collections.emptyMap(), endpoint);
+        return ResponseEntity
+                .status(HttpStatusCode.valueOf(luaReturn.getReturnCode()))
+                .body(getReturnValue(luaReturn).toString());
+    }
+    @GetMapping("/pages/**")
+    public ResponseEntity<?> LuaCoffePages(
             HttpServletRequest request
     ) throws IOException, URISyntaxException {
 

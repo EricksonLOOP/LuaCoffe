@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LuaCoffe - Pages</title>
+</head>
+<body>
+<h1>WebSocket Teste</h1>
+
+<div id="response"></div>
+
+<script>
+    const socket = new WebSocket("ws://localhost:8080/ws");
+    socket.onopen = () => {
+        console.log("Conexão WebSocket estabelecida");
+    };
+    socket.onmessage = (event) => {
+        document.getElementById("response").innerText = event.data;
+    };
+    function trigger(trigger, file) {
+        socket.send(trigger);
+    }
+    socket.onclose = () => {
+        console.log("Conexão WebSocket fechada");
+    };
+</script>
+</body>
+</html>
