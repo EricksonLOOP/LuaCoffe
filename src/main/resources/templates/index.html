@@ -2,6 +2,11 @@
 <html>
 <head>
     <title>LuaCoffe - Pages</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.2/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
 </head>
 <body>
 <h1>WebSocket Teste</h1>
@@ -9,37 +14,21 @@
 <div id="root"></div>
 
 <script>
-    // Obtém o caminho da URL atual
     const path = window.location.pathname;
-
-    // Cria a conexão WebSocket
     const socket = new WebSocket('ws://localhost:8080/ws');
-
-
     socket.onopen = function(event) {
         console.log("Conexão WebSocket estabelecida!");
         socket.send(`${path},${""}`);
     };
-
-    // Função que pode ser chamada para enviar o caminho novamente
     function trigger() {
         socket.send(`${path},${""}`);
     }
-
-    // Evento que é disparado quando o servidor envia uma resposta
     socket.onmessage = function(event) {
 
         document.getElementById("root").innerHTML = event.data;
         executarScript();
     };
 
-    // Função que executa o script para alterar o fundo da página
-    function executarScript() {
-        console.log("Executando script após a abertura da página...");
-
-        // Altera a cor de fundo da página
-        document.body.style.backgroundColor = 'lightblue';
-    }
 </script>
 
 </body>

@@ -3,6 +3,7 @@ package com.edev.luabridge.Modules.LuaLibs.Libs;
 import com.edev.luabridge.Modules.LuaLibs.LuaDB.LuaDB;
 import com.edev.luabridge.Modules.LuaLibs.LuaHttp.LuaOkHttp;
 import com.edev.luabridge.Modules.LuaLibs.LuaJSONConverter.LuaJSON;
+import com.edev.luabridge.Modules.Pages.components.ComponentsLib;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.ZeroArgFunction;
@@ -15,6 +16,7 @@ public class Libs extends ZeroArgFunction {
         libs.set("dataBase", new LuaDB().call());
         libs.set("luaJson", new LuaJSON().call());
         libs.set("luaOkHttp", new LuaOkHttp().call());
+        libs.set("pages", new ComponentsLib().call());
         return libs;
     }
 }
