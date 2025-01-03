@@ -1,6 +1,7 @@
 spring:
   application:
     name: LuaBridge
+
 file:
   path: /src/main/java/com/edev/luabridge/App/src/routes/
   package:
