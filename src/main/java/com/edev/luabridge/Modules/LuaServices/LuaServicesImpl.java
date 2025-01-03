@@ -25,7 +25,7 @@ public class LuaServicesImpl implements LuaServices{
     }
 
     @Override
-    public LuaReturn runScript(String script, Map<String, Object> params, String path) {
+    public LuaReturn runScriptApi(String script, Map<String, Object> params, String path) {
         try {
             String complete = luaActions.ReplaceWaitingValues(script, params, path);
             LuaTable luacoffe = new LuaTable();
@@ -52,6 +52,59 @@ public class LuaServicesImpl implements LuaServices{
             throw new NullPointerException("NullPointerException: " + e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException("Unexpected error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public LuaReturn runScriptPages(String script, Map<String, Object> params, String path, String action) {
+        try {
+            // Substituir variáveis no script (se necessário)
+            String complete = luaActions.ReplaceWaitingValues(script, params, path);
+
+            // Criar o contexto global
+            LuaTable luacoffe = new LuaTable();
+            luacoffe.set("libs", new Libs().call());
+            globals.set("luaCoffe", luacoffe);
+
+            String currentDirectory = Paths.get("").toAbsolutePath().toString();
+            globals.set("package.path", currentDirectory + importsPath);
+
+            // Inicializar o estado global no contexto Lua
+            LuaTable state = new LuaTable();
+            globals.set("luaCoffe", luacoffe);
+            globals.set("state", state);
+
+
+            LuaValue chunk = globals.load(complete);
+            chunk.call();
+
+
+            LuaTable eventsTable = globals.get("luaCoffe").get("libs").get("events").get("eventsList").checktable();
+
+
+            LuaValue event = eventsTable.get(action);
+
+            if (!event.isnil() && event.isfunction()) {
+                LuaFunction eventFunction = event.checkfunction();
+                eventFunction.call();
+            }
+
+
+            LuaValue result = chunk.call();
+            LuaTable responseTable = result.checktable();
+
+            if (responseTable.get("code").isnil() || responseTable.get("response").isnil(1)) {
+                throw new LuaError("A tabela LuaResponse deve conter pelo menos dois valores.");
+            }
+
+            return new LuaReturn(Integer.parseInt(responseTable.get("code").toString()), responseTable.get("response"));
+
+        } catch (LuaError e) {
+            throw new LuaError("Erro no Lua: " + e.getMessage());
+        } catch (NullPointerException e) {
+            throw new NullPointerException("Erro de ponteiro nulo: " + e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("Erro inesperado: " + e.getMessage());
         }
     }
 

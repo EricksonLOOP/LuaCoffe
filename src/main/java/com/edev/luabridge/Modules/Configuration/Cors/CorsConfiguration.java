@@ -1,4 +1,4 @@
-package com.edev.luabridge.Configuration.Cors;
+package com.edev.luabridge.Modules.Configuration.Cors;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

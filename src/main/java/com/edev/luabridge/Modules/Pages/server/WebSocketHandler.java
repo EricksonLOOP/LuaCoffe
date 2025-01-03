@@ -2,17 +2,11 @@ package com.edev.luabridge.Modules.Pages.server;
 
 import com.edev.luabridge.Models.LuaCoffeLuaReturnModel.LuaReturn;
 import com.edev.luabridge.Modules.File.FileServices;
-import com.edev.luabridge.Modules.File.FileServicesImpl;
 import com.edev.luabridge.Modules.LuaServices.LuaServices;
-import com.edev.luabridge.Modules.LuaServices.LuaServicesImpl;
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
+import com.edev.luabridge.Modules.Pages.events.EventsLib;
 import jakarta.annotation.PostConstruct;
-import org.luaj.vm2.LuaTable;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.Varargs;
+import org.luaj.vm2.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.TextMessage;
@@ -29,12 +23,15 @@ import java.util.Optional;
 @Component
 public class WebSocketHandler extends TextWebSocketHandler {
     @Autowired
+    private final EventsLib eventsLib;
+    @Autowired
    private final FileServices fileServices;
     @Autowired
     private final LuaServices luaServices;
     private String validOrigin = "http://localhost:8080";
 
-    public WebSocketHandler(FileServices fileServices, LuaServices luaServices) {
+    public WebSocketHandler(EventsLib eventsLib, FileServices fileServices, LuaServices luaServices) {
+        this.eventsLib = eventsLib;
         this.fileServices = fileServices;
         this.luaServices = luaServices;
     }
@@ -54,7 +51,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
 
             if (verificarHost(session)) {
-                String requestUri = session.getUri().toString();
                 String page = abrirPagina(message.getPayload());
                 if ( page != null){
                     session.sendMessage(new TextMessage(page));
@@ -75,9 +71,12 @@ public class WebSocketHandler extends TextWebSocketHandler {
     private String abrirPagina(String message) throws IOException {
         String[] messageIdx = message.split(",");
         String endpoint = messageIdx[0];
-        String[] paths = endpoint.split("/");
-        String luascript = endpoint.substring(endpoint.lastIndexOf('/') + 1);
-        Optional<File> fileOpt = Optional.ofNullable(fileServices.encontrarArquivos(luascript, "get"));
+        String action = "";
+       if (messageIdx.length>1){
+           action = messageIdx[1];
+       }
+
+        Optional<File> fileOpt = Optional.ofNullable(fileServices.encontrarArquivos(endpoint.substring(endpoint.lastIndexOf('/') + 1), "get"));
         if (fileOpt.isEmpty()) {
             return null;
         }
@@ -88,8 +87,21 @@ public class WebSocketHandler extends TextWebSocketHandler {
             return null;
         }
 
-        LuaReturn luaReturn = luaServices.runScript(readFile, Collections.emptyMap(), endpoint);
+       LuaReturn luaReturn = luaServices.runScriptPages(readFile, Collections.emptyMap(), endpoint, action);
+
+
+
         return getReturnValue(luaReturn).toString();
+    }
+
+    private LuaReturn handleEvent(String action, LuaReturn firstLuareturn) {
+        if (!action.equals("") && eventsLib.getEventsTable().get(action).checkfunction().isfunction()){
+            LuaFunction actionFunction = eventsLib.getEventsTable().get(action).checkfunction();
+            actionFunction.call();
+           return firstLuareturn;
+        }else{
+            return firstLuareturn;
+        }
     }
 
     public Object getReturnValue(LuaReturn luaReturn) {

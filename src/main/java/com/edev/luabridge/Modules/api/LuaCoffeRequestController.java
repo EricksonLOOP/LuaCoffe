@@ -51,7 +51,7 @@ public class LuaCoffeRequestController {
             return ResponseEntity.badRequest().body("Script está vazio");
         }
 
-        LuaReturn luaReturn = luaServices.runScript(readFile, Collections.emptyMap(), endpoint);
+        LuaReturn luaReturn = luaServices.runScriptApi(readFile, Collections.emptyMap(), endpoint);
         return ResponseEntity
                 .status(HttpStatusCode.valueOf(luaReturn.getReturnCode()))
                 .body(getReturnValue(luaReturn).toString());
@@ -74,7 +74,7 @@ public class LuaCoffeRequestController {
             return ResponseEntity.badRequest().body("Script está vazio");
         }
 
-        LuaReturn luaReturn = luaServices.runScript(readFile, Collections.emptyMap(), endpoint);
+        LuaReturn luaReturn = luaServices.runScriptApi(readFile, Collections.emptyMap(), endpoint);
         return ResponseEntity
                 .status(HttpStatusCode.valueOf(luaReturn.getReturnCode()))
                 .body(getReturnValue(luaReturn).toString());
@@ -103,7 +103,7 @@ public class LuaCoffeRequestController {
             if (readFile.isEmpty()) {
                 return ResponseEntity.badRequest().body("Script está vazio");
             }
-            LuaReturn luaReturn = luaServices.runScript(readFile, params, endpoint);
+            LuaReturn luaReturn = luaServices.runScriptApi(readFile, params, endpoint);
             return ResponseEntity
                     .status(HttpStatusCode.valueOf(luaReturn.getReturnCode()))
                     .body(getReturnValue(luaReturn));
@@ -134,7 +134,7 @@ public class LuaCoffeRequestController {
             if (readFile.isEmpty()) {
                 return ResponseEntity.badRequest().body("Script está vazio");
             }
-            LuaReturn luaReturn = luaServices.runScript(readFile, params, endpoint);
+            LuaReturn luaReturn = luaServices.runScriptApi(readFile, params, endpoint);
             return ResponseEntity
                     .status(HttpStatusCode.valueOf(luaReturn.getReturnCode()))
                     .body(getReturnValue(luaReturn));
@@ -165,7 +165,7 @@ public class LuaCoffeRequestController {
             if (readFile.isEmpty()) {
                 return ResponseEntity.badRequest().body("Script está vazio");
             }
-            LuaReturn luaReturn = luaServices.runScript(readFile, params, endpoint);
+            LuaReturn luaReturn = luaServices.runScriptApi(readFile, params, endpoint);
             return ResponseEntity
                     .status(HttpStatusCode.valueOf(luaReturn.getReturnCode()))
                     .body(getReturnValue(luaReturn));

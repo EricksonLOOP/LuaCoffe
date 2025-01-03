@@ -173,13 +173,12 @@ public class LuaActions {
         StringBuilder sb = new StringBuilder();
 
         // Depuração: Verifique o script original
-        System.out.println("Script Original:\n" + script);
 
         boolean foundImport = false;
 
         while (matcher.find()) {
             String fileName = matcher.group(1);
-            System.out.println("Import encontrado: " + fileName);
+
 
             File fileImported = fileServices.encontrarArquivosImportados(fileName);
 
@@ -188,7 +187,6 @@ public class LuaActions {
             }
 
             String importedContent = fileServices.readFile(fileImported);
-            System.out.println("Conteúdo importado:\n" + importedContent);
 
             String importedCode = "function()\n" + importedContent + "\nend";
             matcher.appendReplacement(sb, importedCode);

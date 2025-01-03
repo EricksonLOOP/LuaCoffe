@@ -1,4 +1,4 @@
-package com.edev.luabridge.Configuration.Web;
+package com.edev.luabridge.Modules.Configuration.Web;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;

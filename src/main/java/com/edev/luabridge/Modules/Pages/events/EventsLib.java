@@ -1,20 +1,28 @@
 package com.edev.luabridge.Modules.Pages.events;
 
-import org.luaj.vm2.Lua;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.TwoArgFunction;
 import org.luaj.vm2.lib.ZeroArgFunction;
+import org.springframework.stereotype.Component;
 
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Component
 public class EventsLib extends ZeroArgFunction {
 
-    private LuaTable eventsTable = new LuaTable();
+    public LuaTable eventsTable = new LuaTable();
 
     @Override
     public LuaValue call() {
 
         LuaTable eventsLib = new LuaTable();
         eventsLib.set("addEvent", new addEvent());
+        eventsLib.set("eventsList", eventsTable.checktable());
         eventsLib.set("triggerEvent", new triggerEvent());
         return eventsLib;
     }
