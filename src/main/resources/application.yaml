@@ -4,5 +4,7 @@ spring:
 
 file:
   path: /src/main/java/com/edev/luabridge/App/src/routes/
+  pages:
+    path: /src/main/java/com/edev/luabridge/App/src/pages/
   package:
     path: /src/main/java/com/edev/luabridge/App/src/scripts

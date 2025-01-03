@@ -15,11 +15,9 @@
     // Cria a conexão WebSocket
     const socket = new WebSocket('ws://localhost:8080/ws');
 
-    // Evento que é disparado quando a conexão é aberta
+
     socket.onopen = function(event) {
         console.log("Conexão WebSocket estabelecida!");
-
-        // Envia o caminho da URL para o servidor
         socket.send(`${path},${""}`);
     };
 
@@ -30,10 +28,8 @@
 
     // Evento que é disparado quando o servidor envia uma resposta
     socket.onmessage = function(event) {
-        // Exibe a mensagem recebida do servidor no elemento "root"
-        document.getElementById("root").innerText = event.data;
 
-        // Chama a função para executar o script na página
+        document.getElementById("root").innerHTML = event.data;
         executarScript();
     };
 

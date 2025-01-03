@@ -92,31 +92,9 @@ public class WebSocketHandler extends TextWebSocketHandler {
         return getReturnValue(luaReturn).toString();
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public Object getReturnValue(LuaReturn luaReturn) {
         LuaValue returnObj = luaReturn.getReturnObj();
+
 
         if (returnObj.isstring()) {
             return returnObj.tojstring();
@@ -133,6 +111,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
             return returnObj.tojstring();
         }
     }
+
     public Map<String, Object> luaTableToMap(LuaTable luaTable) {
         Map<String, Object> map = new HashMap<>();
         LuaValue k = LuaValue.NIL;
