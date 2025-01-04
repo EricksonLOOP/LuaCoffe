@@ -9,6 +9,6 @@ import java.util.Map;
 public interface LuaServices {
     //Retornos Públicos
     LuaReturn runScriptApi(String script, Map<String, Object> params, String path);
-    LuaReturn runScriptPages(String script, Map<String, Object> params, String path, String action);
+    LuaReturn runScriptPages(String script, Map<String, Object> params, String path, String action, boolean isSameFile);
 
 }

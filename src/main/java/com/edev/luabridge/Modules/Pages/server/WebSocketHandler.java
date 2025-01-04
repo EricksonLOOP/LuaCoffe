@@ -22,14 +22,15 @@ import java.util.Optional;
 
 @Component
 public class WebSocketHandler extends TextWebSocketHandler {
+
     @Autowired
     private final EventsLib eventsLib;
     @Autowired
-   private final FileServices fileServices;
+    private final FileServices fileServices;
     @Autowired
     private final LuaServices luaServices;
     private String validOrigin = "http://localhost:8080";
-
+    private String oldPath = null;
     public WebSocketHandler(EventsLib eventsLib, FileServices fileServices, LuaServices luaServices) {
         this.eventsLib = eventsLib;
         this.fileServices = fileServices;
@@ -45,6 +46,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) {
         System.out.println("Mensagem recebida: " + message.getPayload());
+
 
         try {
             HttpHeaders handshakeHeaders = session.getHandshakeHeaders();
@@ -69,12 +71,15 @@ public class WebSocketHandler extends TextWebSocketHandler {
     }
 
     private String abrirPagina(String message) throws IOException {
+
+    if (oldPath == null){
         String[] messageIdx = message.split(",");
         String endpoint = messageIdx[0];
+        oldPath = endpoint;
         String action = "";
-       if (messageIdx.length>1){
-           action = messageIdx[1];
-       }
+        if (messageIdx.length>1){
+            action = messageIdx[1];
+        }
 
         Optional<File> fileOpt = Optional.ofNullable(fileServices.encontrarArquivos(endpoint.substring(endpoint.lastIndexOf('/') + 1), "get"));
         if (fileOpt.isEmpty()) {
@@ -87,11 +92,41 @@ public class WebSocketHandler extends TextWebSocketHandler {
             return null;
         }
 
-       LuaReturn luaReturn = luaServices.runScriptPages(readFile, Collections.emptyMap(), endpoint, action);
+        LuaReturn luaReturn = luaServices.runScriptPages(readFile, Collections.emptyMap(), endpoint, action, false);
 
 
 
         return getReturnValue(luaReturn).toString();
+    }else{
+        boolean isSameFile = true;
+        String[] messageIdx = message.split(",");
+        String endpoint = messageIdx[0];
+        if (!oldPath.equals(endpoint)){
+            oldPath = endpoint;
+            isSameFile = false;
+        }
+        String action = "";
+        if (messageIdx.length>1){
+            action = messageIdx[1];
+        }
+
+        Optional<File> fileOpt = Optional.ofNullable(fileServices.encontrarArquivos(endpoint.substring(endpoint.lastIndexOf('/') + 1), "get"));
+        if (fileOpt.isEmpty()) {
+            return null;
+        }
+
+        File scriptFile = fileOpt.get();
+        String readFile = fileServices.readFile(scriptFile);
+        if (readFile.isEmpty()) {
+            return null;
+        }
+
+        LuaReturn luaReturn = luaServices.runScriptPages(readFile, Collections.emptyMap(), endpoint, action, isSameFile);
+
+
+
+        return getReturnValue(luaReturn).toString();
+    }
     }
 
     private LuaReturn handleEvent(String action, LuaReturn firstLuareturn) {

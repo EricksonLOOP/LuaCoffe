@@ -8,12 +8,12 @@ local e = luaCoffe.libs.events
 luaCoffe.state = luaCoffe.state or {}
 
 -- Usuário pode definir uma tabela personalizada de estados
-luaCoffe.state.personState = luaCoffe.state.personState or { showNames = false }
+luaCoffe.state.personState = luaCoffe.state.personState or { state = false }
 
 -- Função para exibir as pessoas
 local persons = function()
     local result = ""
-    if luaCoffe.state.personState.showNames then
+    if luaCoffe.state.personState.state then
         for _, person in ipairs(names) do
             result = result .. "<a>" .. person .. "</a>"
         end
@@ -24,13 +24,11 @@ local persons = function()
 end
 
 -- Evento para alternar o estado showNames
-e.addEvent("showNames", function()
-    -- Alterna o estado de showNames
-    if luaCoffe.state.personState.showNames then
-        luaCoffe.state.personState.showNames = false
-    else
-        luaCoffe.state.personState.showNames = true
-    end
+e.addEvent("toggleShowNames", function()
+    -- Alterar o estado de 'showNames'
+    print("Before toggle: " .. tostring(luaCoffe.state.personState.state))  -- Debugging line
+    luaCoffe.state.personState.state = not luaCoffe.state.personState.state  -- Alterna entre true/false
+    print("After toggle: " .. tostring(luaCoffe.state.personState.state))  -- Debugging line
 end)
 
 -- Função que renderiza o conteúdo da página
@@ -43,9 +41,9 @@ local pages = _.div(
                     persons(),
                     _.button({
                         type = "button",
-                        onClick = "trigger('showNames')",  -- Chama o trigger
+                        onClick = "trigger('toggleShowNames')",  -- Chama o trigger
                         class = "bg-black w-[130px] p-2 rounded-full"
-                    }, "Permitir")
+                    }, "Alternar Exibição")
                 }
         )
 )
