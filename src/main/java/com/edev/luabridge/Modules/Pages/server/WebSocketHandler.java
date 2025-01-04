@@ -81,9 +81,19 @@ public class WebSocketHandler extends TextWebSocketHandler {
             action = messageIdx[1];
         }
 
-        Optional<File> fileOpt = Optional.ofNullable(fileServices.encontrarArquivos(endpoint.substring(endpoint.lastIndexOf('/') + 1), "get"));
-        if (fileOpt.isEmpty()) {
-            return null;
+        Optional<File> fileOpt;
+        if(endpoint.equals("/")){
+            fileOpt = Optional.ofNullable(fileServices.encontrarArquivos("index", "get"));
+            if (fileOpt.isEmpty()) {
+                return null;
+            }
+
+        }else{
+            fileOpt = Optional.ofNullable(fileServices.encontrarArquivos(endpoint.substring(endpoint.lastIndexOf('/') + 1), "get"));
+            if (fileOpt.isEmpty()) {
+                return null;
+            }
+
         }
 
         File scriptFile = fileOpt.get();
@@ -109,12 +119,20 @@ public class WebSocketHandler extends TextWebSocketHandler {
         if (messageIdx.length>1){
             action = messageIdx[1];
         }
-
-        Optional<File> fileOpt = Optional.ofNullable(fileServices.encontrarArquivos(endpoint.substring(endpoint.lastIndexOf('/') + 1), "get"));
+        Optional<File> fileOpt;
+    if(endpoint.equals("/")){
+       fileOpt = Optional.ofNullable(fileServices.encontrarArquivos("index", "get"));
         if (fileOpt.isEmpty()) {
             return null;
         }
 
+    }else{
+        fileOpt = Optional.ofNullable(fileServices.encontrarArquivos(endpoint.substring(endpoint.lastIndexOf('/') + 1), "get"));
+        if (fileOpt.isEmpty()) {
+            return null;
+        }
+
+    }
         File scriptFile = fileOpt.get();
         String readFile = fileServices.readFile(scriptFile);
         if (readFile.isEmpty()) {

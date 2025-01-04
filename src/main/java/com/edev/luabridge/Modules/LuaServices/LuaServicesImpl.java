@@ -17,6 +17,7 @@ public class LuaServicesImpl implements LuaServices{
     private final LuaActions luaActions;
     private final DataBaseManager dataBaseManager = new DataBaseManager();
     private LuaFunction previusContext;
+    private String oldScript;
     private LuaTable responseTable;
     @Value("${file.package.path}")
     String importsPath;
@@ -61,14 +62,14 @@ public class LuaServicesImpl implements LuaServices{
     public LuaReturn runScriptPages(String script, Map<String, Object> params, String path, String action, boolean isSameFile) {
         try {
 
-            if (isSameFile) {
+            if (isSameFile && oldScript.equals(script)) {
                 LuaValue chunk = previusContext.checkfunction();
                 LuaTable eventsTable = globals.get("luaCoffe").get("libs").get("events").get("eventsList").checktable();
 
                 LuaValue event = eventsTable.get(action);
 
                 if (!event.isnil() && event.isfunction()) {
-                   
+
                     LuaFunction eventFunction = event.checkfunction();
                     eventFunction.call();
 
@@ -85,6 +86,7 @@ public class LuaServicesImpl implements LuaServices{
                 responseTable = result.checktable();
 
             } else {
+                oldScript = script;
                 String complete = luaActions.ReplaceWaitingValues(script, params, path);
 
                 LuaTable luacoffe = new LuaTable();
@@ -121,6 +123,7 @@ public class LuaServicesImpl implements LuaServices{
 
                 LuaValue result = chunk.call();
                 previusContext = chunk.checkfunction();
+
                 responseTable = result.checktable();
             }
 

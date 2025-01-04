@@ -21,6 +21,7 @@ public class ComponentsLib extends ZeroArgFunction {
         components.set("footer", new Footer());
         components.set("article", new Article());
         components.set("aside", new Aside());
+        components.set("nav", new Nav());
         // Tables
         components.set("table", new Table());
         components.set("tr", new Tr());
@@ -322,6 +323,43 @@ public class ComponentsLib extends ZeroArgFunction {
             }
 
             sb.append("</aside>");
+            return LuaValue.valueOf(sb.toString());
+        }
+    }
+    public class Nav extends TwoArgFunction {
+        @Override
+        public LuaValue call(LuaValue attributeArray, LuaValue contentArray) {
+            StringBuilder sb = new StringBuilder();
+
+            sb.append("<nav");
+
+            // Adicionar atributos, se houver
+            if (attributeArray.istable()) {
+                LuaTable attributes = attributeArray.checktable();
+                LuaValue k = LuaValue.NIL;
+                while (true) {
+                    Varargs n = attributes.next(k);
+                    k = n.arg1();
+                    if (k.isnil()) break;
+                    LuaValue v = n.arg(2);
+
+
+                    sb.append(" ").append(k.tojstring()).append("=\"").append(v.tojstring()).append("\"");
+                }
+            }
+
+            sb.append(">");
+            if (contentArray.istable()) {
+                LuaTable contents = contentArray.checktable();
+                for (int i = 1; i <= contents.length(); i++) {
+                    LuaValue content = contents.get(i);
+                    sb.append(content.tojstring());
+                }
+            } else {
+                sb.append(contentArray.tojstring());
+            }
+
+            sb.append("</nav>");
             return LuaValue.valueOf(sb.toString());
         }
     }

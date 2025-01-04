@@ -4,13 +4,12 @@ local _ = luaCoffe.libs.pages
 local names = {"name", "name2", "name3"}
 local e = luaCoffe.libs.events
 
--- Criando uma nova tabela de estados personalizada para 'personState'
+
 luaCoffe.state = luaCoffe.state or {}
 
--- Usuário pode definir uma tabela personalizada de estados
+
 luaCoffe.state.personState = luaCoffe.state.personState or { state = false }
 
--- Função para exibir as pessoas
 local persons = function()
     local result = ""
     if luaCoffe.state.personState.state then
@@ -23,15 +22,14 @@ local persons = function()
     end
 end
 
--- Evento para alternar o estado showNames
+
 e.addEvent("toggleShowNames", function()
-    -- Alterar o estado de 'showNames'
-    print("Before toggle: " .. tostring(luaCoffe.state.personState.state))  -- Debugging line
-    luaCoffe.state.personState.state = not luaCoffe.state.personState.state  -- Alterna entre true/false
-    print("After toggle: " .. tostring(luaCoffe.state.personState.state))  -- Debugging line
+    print("Before toggle: " .. tostring(luaCoffe.state.personState.state))
+    luaCoffe.state.personState.state = not luaCoffe.state.personState.state
+    print("After toggle: " .. tostring(luaCoffe.state.personState.state))
 end)
 
--- Função que renderiza o conteúdo da página
+
 local pages = _.div(
         { class = "p-4" },
         _.div(
@@ -41,12 +39,12 @@ local pages = _.div(
                     persons(),
                     _.button({
                         type = "button",
-                        onClick = "trigger('toggleShowNames')",  -- Chama o trigger
+                        onClick = "trigger('toggleShowNames')",
                         class = "bg-black w-[130px] p-2 rounded-full"
                     }, "Alternar Exibição")
                 }
         )
 )
 
--- Retorna o código da resposta e o conteúdo da página
+
 return { code = 200, response = pages }

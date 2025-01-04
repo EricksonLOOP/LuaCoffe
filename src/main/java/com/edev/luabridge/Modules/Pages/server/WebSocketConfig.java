@@ -26,7 +26,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        // Registra um WebSocketHandler para uma URL específica
         registry.addHandler(new WebSocketHandler(eventsLib, fileServices, luaServices), "/ws").setAllowedOrigins("*");
     }
 }
