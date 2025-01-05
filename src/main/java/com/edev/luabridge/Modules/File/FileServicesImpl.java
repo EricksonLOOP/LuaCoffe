@@ -31,19 +31,6 @@ public class FileServicesImpl implements FileServices, FilenameFilter {
         }catch(IOException e){
             throw new RuntimeException(e.getCause());
         }
-//        File directory = new File(currentDirectory + filepath + method);
-//        if (directory.exists() && directory.isDirectory()) {
-//            File[] files = directory.listFiles();
-//            if (files != null) {
-//                for (File file : files) {
-//                    if (file.getName().equals(name+".lua")) {
-//                        return file;
-//                    }
-//                }
-//            }
-//        }
-
-//        return null;
     }
 
 
@@ -66,6 +53,7 @@ public class FileServicesImpl implements FileServices, FilenameFilter {
 
         return null;
     }
+
 
     @Override
     public String readFile(File arquivo) throws IOException {

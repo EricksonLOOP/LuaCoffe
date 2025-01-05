@@ -47,7 +47,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
     public void handleTextMessage(WebSocketSession session, TextMessage message) {
         System.out.println("Mensagem recebida: " + message.getPayload());
 
-
         try {
             HttpHeaders handshakeHeaders = session.getHandshakeHeaders();
 
@@ -147,6 +146,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
     }
     }
 
+
+
     private LuaReturn handleEvent(String action, LuaReturn firstLuareturn) {
         if (!action.equals("") && eventsLib.getEventsTable().get(action).checkfunction().isfunction()){
             LuaFunction actionFunction = eventsLib.getEventsTable().get(action).checkfunction();
@@ -156,6 +157,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
             return firstLuareturn;
         }
     }
+
+
 
     public Object getReturnValue(LuaReturn luaReturn) {
         LuaValue returnObj = luaReturn.getReturnObj();

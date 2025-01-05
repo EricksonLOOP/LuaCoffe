@@ -11,7 +11,7 @@ import org.luaj.vm2.lib.ZeroArgFunction;
 import org.springframework.stereotype.Component;
 
 // Aqui fica armazenado as bibliotecas dentro do luaCoffe.libs
-// Caso criar uma lib nova, crie um módlo novo, desenvolva ele, e adicione ele no luaCoffe.libs
+// Caso criar uma lib nova, crie um módulo novo, desenvolva ele, e adicione ele no luaCoffe.libs
 @Component
 public class Libs extends ZeroArgFunction {
     @Override
