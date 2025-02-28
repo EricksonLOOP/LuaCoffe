@@ -1,6 +1,6 @@
 package com.edev.luabridge.Modules.LuaServices;
 
-import com.edev.luabridge.Models.LuaCoffeLuaReturnModel.LuaReturn;
+import com.edev.luabridge.App.src.routes.Models.LuaCoffeLuaReturnModel.LuaReturn;
 import com.edev.luabridge.Modules.LuaLibs.Libs.Libs;
 import com.edev.luabridge.Modules.LuaLibs.LuaDB.DataBaseManager;
 import com.edev.luabridge.Modules.FunctionsServices.LuaActions;

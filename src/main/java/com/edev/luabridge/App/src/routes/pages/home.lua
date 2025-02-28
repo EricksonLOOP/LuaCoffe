@@ -32,18 +32,22 @@ end)
 
 local pages = _.div(
         { class = "p-4" },
-        _.div(
-                { id = "id-123", class = "bg-blue-300 text-white flex gap-10 p-2 items-center justify-center" },
-                {
-                    _.div({}, "Lista de Pessoas"),
-                    persons(),
-                    _.button({
-                        type = "button",
-                        onClick = "trigger('toggleShowNames')",
-                        class = "bg-black w-[130px] p-2 rounded-full"
-                    }, "Alternar Exibição")
-                }
-        )
+
+               _.form(
+                       {class = "p-2 flex flex-col gap-4 items-center justify-center", action="http://localhost:8080/api/post/print"},
+                       {
+                           _.input(
+                                   {type="text", placeholder="Aqui esté seu input", value = value},
+                                   {}
+                           ),
+                           _.button(
+                                   {type = "submit", class="bg-blue-400 p-2 w-[100px] rounded-md font-bold text-white"},
+                                   {
+                                       "Enviar"
+                                   }
+                           )
+                       }
+               )
 )
 
 

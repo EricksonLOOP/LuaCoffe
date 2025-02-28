@@ -1,6 +1,6 @@
 package com.edev.luabridge.Modules.Pages.server;
 
-import com.edev.luabridge.Models.LuaCoffeLuaReturnModel.LuaReturn;
+import com.edev.luabridge.App.src.routes.Models.LuaCoffeLuaReturnModel.LuaReturn;
 import com.edev.luabridge.Modules.File.FileServices;
 import com.edev.luabridge.Modules.LuaServices.LuaServices;
 import com.edev.luabridge.Modules.Pages.events.EventsLib;
@@ -40,7 +40,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
     @PostConstruct
     public void init() {
-        System.out.println("Valid Origin: " + validOrigin);  // Verifique o valor aqui
+        System.out.println("Valid Origin: " + validOrigin);
     }
 
     @Override

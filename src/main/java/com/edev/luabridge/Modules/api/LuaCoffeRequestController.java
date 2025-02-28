@@ -1,6 +1,6 @@
 package com.edev.luabridge.Modules.api;
 
-import com.edev.luabridge.Models.LuaCoffeLuaReturnModel.LuaReturn;
+import com.edev.luabridge.App.src.routes.Models.LuaCoffeLuaReturnModel.LuaReturn;
 import com.edev.luabridge.Modules.File.FileServices;
 import com.edev.luabridge.Modules.LuaServices.LuaServices;
 import jakarta.servlet.http.HttpServletRequest;
