@@ -1,8 +1,9 @@
 package com.edev.luabridge.Modules.api;
 
-import com.edev.luabridge.App.src.routes.Models.LuaCoffeLuaReturnModel.LuaReturn;
+
 import com.edev.luabridge.Modules.File.FileServices;
 import com.edev.luabridge.Modules.LuaServices.LuaServices;
+import com.edev.luabridge.Modules.api.Models.LuaCoffeLuaReturnModel.LuaReturn;
 import jakarta.servlet.http.HttpServletRequest;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
@@ -40,7 +41,7 @@ public class LuaCoffeRequestController {
 
         String endpoint = request.getRequestURI().substring(request.getContextPath().length() + "/get/".length());
         String luascript = endpoint.substring(endpoint.lastIndexOf('/') + 1);
-        Optional<File> fileOpt = Optional.ofNullable(fileServices.encontrarArquivos(luascript, "get"));
+        Optional<File> fileOpt = Optional.ofNullable(fileServices.findFile(luascript, "get"));
         if (fileOpt.isEmpty()) {
             return ResponseEntity.badRequest().body("Script não encontrado");
         }
@@ -63,7 +64,7 @@ public class LuaCoffeRequestController {
 
         String endpoint = request.getRequestURI().substring(request.getContextPath().length() + "/get/".length());
         String luascript = endpoint.substring(endpoint.lastIndexOf('/') + 1);
-        Optional<File> fileOpt = Optional.ofNullable(fileServices.encontrarArquivos(luascript, "get"));
+        Optional<File> fileOpt = Optional.ofNullable(fileServices.findFile(luascript, "get"));
         if (fileOpt.isEmpty()) {
             return ResponseEntity.badRequest().body("Script não encontrado");
         }
@@ -91,7 +92,7 @@ public class LuaCoffeRequestController {
             String luascript = endpoint.substring(endpoint.lastIndexOf('/') + 1);
 
             String[] paths = endpoint.split("/");
-            Optional<File> file = Optional.ofNullable(fileServices.encontrarArquivos(luascript, "post"));
+            Optional<File> file = Optional.ofNullable(fileServices.findFile(luascript, "post"));
 
             if (file.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endpoint not found");
@@ -122,7 +123,7 @@ public class LuaCoffeRequestController {
             String luascript = endpoint.substring(endpoint.lastIndexOf('/') + 1);
 
             String[] paths = endpoint.split("/");
-            Optional<File> file = Optional.ofNullable(fileServices.encontrarArquivos(luascript, "put"));
+            Optional<File> file = Optional.ofNullable(fileServices.findFile(luascript, "put"));
 
             if (file.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endpoint not found");
@@ -153,7 +154,7 @@ public class LuaCoffeRequestController {
             String luascript = endpoint.substring(endpoint.lastIndexOf('/') + 1);
 
             String[] paths = endpoint.split("/");
-            Optional<File> file = Optional.ofNullable(fileServices.encontrarArquivos(luascript, "delete"));
+            Optional<File> file = Optional.ofNullable(fileServices.findFile(luascript, "delete"));
 
             if (file.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endpoint not found");

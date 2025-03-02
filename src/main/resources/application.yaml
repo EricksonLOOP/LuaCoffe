@@ -3,8 +3,8 @@ spring:
     name: LuaBridge
 
 file:
-  path: /src/main/java/com/edev/luabridge/App/src/routes/
+  path: /src/app/src/routes/
   pages:
-    path: /src/main/java/com/edev/luabridge/App/src/pages/
+    path: /src/app/src/pages/
   package:
-    path: /src/main/java/com/edev/luabridge/App/src/scripts
+    path: /src/app/src/scripts

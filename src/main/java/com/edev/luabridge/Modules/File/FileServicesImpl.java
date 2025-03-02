@@ -20,7 +20,7 @@ public class FileServicesImpl implements FileServices, FilenameFilter {
 
 
     @Override
-    public File encontrarArquivos(String name, String method) {
+    public File findFile(String name, String method) {
         String currentDirectory = Paths.get("").toAbsolutePath().toString();
         try{
             Optional<Path> optionalPath = Files.walk(Paths.get(currentDirectory+filepath))
@@ -35,7 +35,7 @@ public class FileServicesImpl implements FileServices, FilenameFilter {
 
 
     @Override
-    public File encontrarArquivosImportados(String name) {
+    public File findImportedFiles(String name) {
         String currentDirectory = Paths.get("").toAbsolutePath().toString();
         File directory = new File(currentDirectory + filepathImported);
         if (directory.exists() && directory.isDirectory()) {

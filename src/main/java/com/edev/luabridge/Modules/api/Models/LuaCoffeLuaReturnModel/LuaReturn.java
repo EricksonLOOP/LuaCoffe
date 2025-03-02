@@ -1,4 +1,4 @@
-package com.edev.luabridge.App.src.routes.Models.LuaCoffeLuaReturnModel;
+package com.edev.luabridge.Modules.api.Models.LuaCoffeLuaReturnModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

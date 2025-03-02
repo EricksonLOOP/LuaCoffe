@@ -1,9 +1,10 @@
 package com.edev.luabridge.Modules.Pages.server;
 
-import com.edev.luabridge.App.src.routes.Models.LuaCoffeLuaReturnModel.LuaReturn;
+
 import com.edev.luabridge.Modules.File.FileServices;
 import com.edev.luabridge.Modules.LuaServices.LuaServices;
 import com.edev.luabridge.Modules.Pages.events.EventsLib;
+import com.edev.luabridge.Modules.api.Models.LuaCoffeLuaReturnModel.LuaReturn;
 import jakarta.annotation.PostConstruct;
 import org.luaj.vm2.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,13 +83,13 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
         Optional<File> fileOpt;
         if(endpoint.equals("/")){
-            fileOpt = Optional.ofNullable(fileServices.encontrarArquivos("index", "get"));
+            fileOpt = Optional.ofNullable(fileServices.findFile("index", "get"));
             if (fileOpt.isEmpty()) {
                 return null;
             }
 
         }else{
-            fileOpt = Optional.ofNullable(fileServices.encontrarArquivos(endpoint.substring(endpoint.lastIndexOf('/') + 1), "get"));
+            fileOpt = Optional.ofNullable(fileServices.findFile(endpoint.substring(endpoint.lastIndexOf('/') + 1), "get"));
             if (fileOpt.isEmpty()) {
                 return null;
             }
@@ -120,13 +121,13 @@ public class WebSocketHandler extends TextWebSocketHandler {
         }
         Optional<File> fileOpt;
     if(endpoint.equals("/")){
-       fileOpt = Optional.ofNullable(fileServices.encontrarArquivos("index", "get"));
+       fileOpt = Optional.ofNullable(fileServices.findFile("index", "get"));
         if (fileOpt.isEmpty()) {
             return null;
         }
 
     }else{
-        fileOpt = Optional.ofNullable(fileServices.encontrarArquivos(endpoint.substring(endpoint.lastIndexOf('/') + 1), "get"));
+        fileOpt = Optional.ofNullable(fileServices.findFile(endpoint.substring(endpoint.lastIndexOf('/') + 1), "get"));
         if (fileOpt.isEmpty()) {
             return null;
         }

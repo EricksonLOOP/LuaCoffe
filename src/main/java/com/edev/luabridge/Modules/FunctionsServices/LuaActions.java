@@ -176,7 +176,7 @@ public class LuaActions {
             String fileName = matcher.group(1);
 
 
-            File fileImported = fileServices.encontrarArquivosImportados(fileName);
+            File fileImported = fileServices.findImportedFiles(fileName);
 
             if (fileImported == null) {
                 throw new LuaError("Cannot find " + fileName + " in package.");

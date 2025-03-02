@@ -1,6 +1,7 @@
 package com.edev.luabridge.Modules.LuaServices;
 
-import com.edev.luabridge.App.src.routes.Models.LuaCoffeLuaReturnModel.LuaReturn;
+
+import com.edev.luabridge.Modules.api.Models.LuaCoffeLuaReturnModel.LuaReturn;
 
 import java.util.Map;
 

@@ -7,7 +7,7 @@ import org.luaj.vm2.lib.OneArgFunction;
 import org.luaj.vm2.lib.ZeroArgFunction;
 
 public class LuaJSON extends ZeroArgFunction {
-    private static LuaJSONClasse luaJSONClasse = new LuaJSONClasse();
+    private static final LuaJSONClasse luaJSONClasse = new LuaJSONClasse();
 
     @Override
     public LuaValue call() {
@@ -23,7 +23,7 @@ public class LuaJSON extends ZeroArgFunction {
         public LuaValue call(LuaValue luaValue) {
             if (luaValue.checktable().istable()) {
                 LuaTable table = luaValue.checktable();
-                JSONObject tableJson = luaJSONClasse.luaTableToJson(table);
+                JSONObject tableJson = LuaJSONClasse.luaTableToJson(table);
 
                 // Retorna o JSONObject como string para o script Lua
                 return LuaValue.valueOf(tableJson.toString());
@@ -39,9 +39,8 @@ public class LuaJSON extends ZeroArgFunction {
             if (jsonString.isstring()) {
                 String json = jsonString.checkjstring();
                 JSONObject jsonObject = new JSONObject(json);
-                LuaTable luaTable = luaJSONClasse.jsonToLuaTable(jsonObject);
 
-                return luaTable;
+                return LuaJSONClasse.jsonToLuaTable(jsonObject);
             }
             return LuaValue.NIL;
         }

@@ -1,9 +1,11 @@
 package com.edev.luabridge.Modules.LuaServices;
 
-import com.edev.luabridge.App.src.routes.Models.LuaCoffeLuaReturnModel.LuaReturn;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.edev.luabridge.Modules.LuaLibs.Libs.Libs;
 import com.edev.luabridge.Modules.LuaLibs.LuaDB.DataBaseManager;
 import com.edev.luabridge.Modules.FunctionsServices.LuaActions;
+import com.edev.luabridge.Modules.api.Models.LuaCoffeLuaReturnModel.LuaReturn;
 import org.luaj.vm2.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +15,7 @@ import java.util.Map;
 
 @Service
 public class LuaServicesImpl implements LuaServices{
+    private static final Logger logger = LoggerFactory.getLogger(LuaServicesImpl.class);
     private final Globals globals;
     private final LuaActions luaActions;
     private final DataBaseManager dataBaseManager = new DataBaseManager();
@@ -30,7 +33,10 @@ public class LuaServicesImpl implements LuaServices{
     @Override
     public LuaReturn runScriptApi(String script, Map<String, Object> params, String path) {
         try {
+            logger.info("Running script {}",path);
+
             String complete = luaActions.ReplaceWaitingValues(script, params, path);
+
             LuaTable luacoffe = new LuaTable();
             luacoffe.set("libs", new Libs().call());
             globals.set("luaCoffe", luacoffe);
@@ -39,11 +45,14 @@ public class LuaServicesImpl implements LuaServices{
             globals.set("package.path", currentDirectory +importsPath);
             LuaValue chunk = globals.load(complete);
             LuaValue response = chunk.call();
+
             if (!response.istable()) {
+                logger.warn("you should return a LuaResponse table {code = *code*, response = *response*}");
                 throw new LuaError("You should return a LuaResponse table.");
             }
             LuaTable table = response.checktable();
             if (table.get("code").isnil() || table.get("response").isnil(1)) {
+                logger.warn("The LuaResponse table must contain at least two values.");
                 throw new LuaError("The LuaResponse table must contain at least two values.");
             }
 
@@ -128,17 +137,18 @@ public class LuaServicesImpl implements LuaServices{
             }
 
             if (responseTable.get("code").isnil() || responseTable.get("response").isnil(1)) {
-                throw new LuaError("A tabela LuaResponse deve conter pelo menos dois valores.");
+
+                throw new LuaError("The LuaResponse table must contain at least two values.");
             }
 
             return new LuaReturn(Integer.parseInt(responseTable.get("code").toString()), responseTable.get("response"));
 
         } catch (LuaError e) {
-            throw new LuaError("Erro no Lua: " + e.getMessage());
+            throw new LuaError("Lua error: " + e.getMessage());
         } catch (NullPointerException e) {
-            throw new NullPointerException("Erro de ponteiro nulo: " + e.getMessage());
+            throw new NullPointerException("Null pointer error: " + e.getMessage());
         } catch (Exception e) {
-            throw new RuntimeException("Erro inesperado: " + e.getMessage());
+            throw new RuntimeException("Unknown error" + e.getMessage());
         }
     }
 
