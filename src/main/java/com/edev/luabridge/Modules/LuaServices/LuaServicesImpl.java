@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import com.edev.luabridge.Modules.LuaLibs.Libs.Libs;
 import com.edev.luabridge.Modules.LuaLibs.LuaDB.DataBaseManager;
 import com.edev.luabridge.Modules.FunctionsServices.LuaActions;
-import com.edev.luabridge.Modules.api.Models.LuaCoffeLuaReturnModel.LuaReturn;
+import com.edev.luabridge.Modules.api.Models.LuaReturn;
 import org.luaj.vm2.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

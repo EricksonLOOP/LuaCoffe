@@ -4,7 +4,7 @@ package com.edev.luabridge.Modules.Pages.server;
 import com.edev.luabridge.Modules.File.FileServices;
 import com.edev.luabridge.Modules.LuaServices.LuaServices;
 import com.edev.luabridge.Modules.Pages.events.EventsLib;
-import com.edev.luabridge.Modules.api.Models.LuaCoffeLuaReturnModel.LuaReturn;
+import com.edev.luabridge.Modules.api.Models.LuaReturn;
 import jakarta.annotation.PostConstruct;
 import org.luaj.vm2.*;
 import org.springframework.beans.factory.annotation.Autowired;
